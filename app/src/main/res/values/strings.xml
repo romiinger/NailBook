@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">NailBook</string>
     <string name="hello_user">Hello User!</string>
+    <string name="welcome">Welcome to NailBook</string>
+    <string name="professional">Professional</string>
+    <string name="Client">Client</string>
+    <string name="introduction">Choice user mode</string>
 </resources>

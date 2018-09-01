@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/colorSecondary"
+    android:orientation="vertical"
+    android:visibility="visible">
 
-        <TextView
-            android:id= "@+id/text"
-            android:layout_width="286dp"
-            android:layout_height="68dp"
-            android:text="@string/hello_user"
-            android:textSize="112sp"
 
-        />
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
 
-</android.support.constraint.ConstraintLayout>
+        android:background="@color/colorPrimary"
+        android:text="@string/welcome"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryVariant"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/colorPrimaryVariant"
+        android:text="@string/introduction"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+
+        android:textSize="24sp"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/ClientB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:text="@string/Client"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
+        android:textSize="56sp"
+        android:onClick="ClientB"/>
+
+    <Button
+        android:id="@+id/ProfessionalB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+        android:text="@string/professional"
+        android:textAlignment="center"
+        android:textColor="@color/colorSecondary"
+        android:textSize="56sp" />
+
+</LinearLayout>
