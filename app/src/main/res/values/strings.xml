@@ -6,6 +6,7 @@
     <string name="Client">Client</string>
     <string name="NewUser">New User</string>
     <string name="SigIn">SigIn</string>
+    <string name="next">next</string>
 
     <string name="introduction">Choice user mode</string>
 

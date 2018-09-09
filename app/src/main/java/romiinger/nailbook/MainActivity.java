@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.*;
 import android.widget.Button;
-
+import android.content.Intent;
+import android.os.Handler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 public class MainActivity extends AppCompatActivity {
 
-     Button sigInB;
-     //private FirebaseDatabase mFirebaseDatabase;
+    Button next;
+    //private FirebaseDatabase mFirebaseDatabase;
     // private DatabaseReference mDatabaseReference;
 
 
@@ -21,18 +21,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users");*/
-
-        sigInB = (Button)findViewById(R.id.SigIn);
-        sigInB.setOnClickListener(new View.OnClickListener() {
+        //next Activity
+        next = (Button)findViewById(R.id.next);
+        next.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-               setContentView(R.layout.activity_login);
+                setContentView(R.layout.activity_login);
 
             }
         });
+
+        /*mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("users");*/
+
+
     }
 
    /* @Override

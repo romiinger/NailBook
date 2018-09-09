@@ -11,54 +11,33 @@
     <TextView
         android:id="@+id/welcome"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:text="@string/welcome"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryVariant"
         android:textSize="36sp" />
 
-    <TextView
-        android:id="@+id/text"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/colorPrimaryVariant"
-        android:text="@string/introduction"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-
-        android:textSize="24sp"
-        android:visibility="visible" />
+        android:layout_weight="3"
+        android:contentDescription="@string/welcome"
+        android:src="@drawable/wallpaper" />
 
     <Button
-        android:id="@+id/NewUser"
+        android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorPrimary"
-        android:onClick="NewUser"
-        android:padding="20dp"
-        android:text="@string/NewUser"
+        android:padding="30dp"
+        android:text="@string/next"
         android:textAlignment="center"
-        android:textColor="@color/colorSecondary"
-        android:textSize="30sp" />
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
+        android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/SigIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"
-        android:background="@color/colorPrimary"
-        android:padding="20dp"
-        android:text="@string/SigIn"
-        android:textAlignment="center"
-        android:textColor="@color/colorSecondary"
-        android:textSize="30sp"
-        android:onClick="SigIn"/>
 
 </LinearLayout>
