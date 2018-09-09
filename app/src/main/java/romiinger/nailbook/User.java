@@ -13,6 +13,7 @@ public class User
      this.stId=stId;
      this.phone = phone;
      this.mail= mail;
+
  }
  public String getName()
  {

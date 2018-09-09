@@ -11,9 +11,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-     Button buttonClient;
-     private FirebaseDatabase mFirebaseDatabase;
-     private DatabaseReference mDatabaseReference;
+     Button sigInB;
+     //private FirebaseDatabase mFirebaseDatabase;
+    // private DatabaseReference mDatabaseReference;
 
 
     @Override
@@ -21,25 +21,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users");
+        /*mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("users");*/
 
-        buttonClient = (Button)findViewById(R.id.ClientB);
-        buttonClient.setOnClickListener(new View.OnClickListener() {
+        sigInB = (Button)findViewById(R.id.SigIn);
+        sigInB.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+               setContentView(R.layout.activity_login);
 
             }
         });
     }
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
           /*  case R.id.newClient: new User();*/
-        }
+        /*}
         return super.onOptionsItemSelected(item);
     }
 
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
+        FirebaseUtil.openFbReference("newClient",this);
         FirebaseUtil.attachListener();
 
-    }
+    }*/
 }

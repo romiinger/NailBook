@@ -2,6 +2,7 @@ package romiinger.nailbook;
 
 public class UserProfessional extends User
 {
+
     private WorkDiary agent;
     private Treatments treatments;
 

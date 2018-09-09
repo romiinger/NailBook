@@ -24,7 +24,7 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:background="@color/colorPrimaryVariant"
         android:text="@string/introduction"
         android:textAlignment="center"
@@ -34,28 +34,31 @@
         android:visibility="visible" />
 
     <Button
-        android:id="@+id/ClientB"
+        android:id="@+id/NewUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:background="@color/colorPrimary"
-        android:text="@string/Client"
+        android:onClick="NewUser"
+        android:padding="20dp"
+        android:text="@string/NewUser"
         android:textAlignment="center"
         android:textColor="@color/colorSecondary"
-        android:textSize="56sp"
-        android:onClick="ClientB"/>
+        android:textSize="30sp" />
 
     <Button
-        android:id="@+id/ProfessionalB"
+        android:id="@+id/SigIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
         android:background="@color/colorPrimary"
-        android:text="@string/professional"
+        android:padding="20dp"
+        android:text="@string/SigIn"
         android:textAlignment="center"
         android:textColor="@color/colorSecondary"
-        android:textSize="56sp" />
+        android:textSize="30sp"
+        android:onClick="SigIn"/>
 
 </LinearLayout>
