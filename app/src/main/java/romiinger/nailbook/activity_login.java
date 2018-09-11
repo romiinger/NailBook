@@ -14,33 +14,32 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import android.util.Log;
 public class activity_login extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
+    private static final String TAG = "activity_login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        setContentView(R.layout.activity_login);
+        Log.d(TAG,"In activity_login");
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
-
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(activity_login.this, MainActivity.class));
             finish();
         }
 
-        // set the view now
-        setContentView(R.layout.activity_login);
+        Log.d(TAG,"try to create Toolbar");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
-
+        Log.d(TAG,"After create Toolbar");
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);

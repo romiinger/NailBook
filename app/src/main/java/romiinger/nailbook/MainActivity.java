@@ -9,23 +9,32 @@ import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.*;
 import android.support.annotation.NonNull;
+import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.content.Intent;
 import android.os.Handler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.firebase.ui.auth.*;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.Console;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Button next;
-    private FirebaseAuth.AuthStateListener authListener;
-    private FirebaseAuth auth;
+    private FirebaseUtil myFirebase;
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private DrawerLayout mdrawerLayout;
+    private static final String TAG = "MyActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,34 +42,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
 
+        createToolBar();
+        createNavigationView();
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
-
-        //toolbar.setLogo(R.drawable.wallpaper);
-        //toolbar.setSubtitle("Welcome");
-        setSupportActionBar(toolbar);
-
-        mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
-                R.string.drawer_open,R.string.drawer_close);
-        mdrawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
+        //myFirebase
+        //myFirebase.openFbReference("user",this);
+/*
         //get firebase auth instance
-        /*auth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
         //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d(TAG,"User is null?" + (user==null));
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                Log.d(TAG, "in onAuthStateChanged()");
                 if (user == null) {
+                    Log.d(TAG,"User no logIn, start new Intent: activity_login");
                     // user auth state is changed - user is null
                     // launch login activity
-                    startActivity(new Intent(MainActivity.this, activity_login.class));
+                    Intent intent = new Intent(MainActivity.this, activity_login.class);
+                    startActivity(intent);
                     finish();
                 }
             }
@@ -77,18 +80,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-
-        /*mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users");*/
-
-
     }
-
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
-        //menu.add("").setIcon(R.drawable.baseline_list_black_18dp);
-        //MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.menu_nb, menu);
+        menu.add("").setIcon(R.drawable.ic_launcher_background);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
         return true;
     }
 
@@ -99,12 +102,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menuItem.setChecked(true);
         switch (menuItem.getItemId())
         {
-            case R.id.workDiary:
-                    //toDo new activity
+            case R.id.workDiary: {
+                     //toDo new activity
+                       Toast.makeText(this,"coming soon available",Toast.LENGTH_LONG).show();
+                       break;
+                  }
+            case R.id.treatments: {
+                      Toast.makeText(this, "coming soon available", Toast.LENGTH_LONG).show();
+                      //toDo new activity
                      break;
-            case R.id.treatments:
-                //toDo new activity
-                     break;
+            }
+            case R.id.logout_menu: {
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG, "User logged out");
+                                FirebaseUtil.attachListener();
+                            }
+                        });
+                FirebaseUtil.detachListener();
+                return true;
+            }
+
         }
         return true;
     }
@@ -124,15 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else
             super.onBackPressed();
     }
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-          /*  case R.id.newClient: new User();*/
-        /*}
-        return super.onOptionsItemSelected(item);
-    }
-
 
 
     @Override
@@ -144,8 +155,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume()
     {
         super.onResume();
-        FirebaseUtil.openFbReference("newClient",this);
+        FirebaseUtil.openFbReference("user",this);
         FirebaseUtil.attachListener();
 
-    }*/
+    }
+
+    private void createNavigationView()
+    {
+        Log.d(TAG," In Create NavigationView");
+        mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+        if(FirebaseUtil.isIsAdmin() ==true)
+        {
+            navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
+        }
+        navigationView.setNavigationItemSelectedListener(this);
+        ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
+                R.string.drawer_open,R.string.drawer_close);
+        mdrawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+    }
+    private void createToolBar()
+    {
+        Log.d(TAG," In Create toolbar");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+    }
 }

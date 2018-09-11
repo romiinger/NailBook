@@ -2,7 +2,9 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+<group
+    android:id="@+id/users_menu"
+    android:visible="true">
     <item
         android:id="@+id/workDiary"
         android:title="@string/WorkDiary"
@@ -19,6 +21,24 @@
         app:showAsAction="ifRoom">
 
     </item>
+    <item
+        android:id="@+id/logout_menu"
+        android:title="Logout"
+        android:checkable="true"
+        android:icon="@drawable/treataments_icon"
+        app:showAsAction="ifRoom"
+        />
 
+</group>
+<group
+    android:id="@+id/administrator_menu"
+    android:visible="false">
+    <item
+        android:id="@+id/Wallet"
+       android:title="Wallet"
+        android:checkable="true"
+        app:showAsAction="ifRoom"
 
+    />
+</group>
 </menu>

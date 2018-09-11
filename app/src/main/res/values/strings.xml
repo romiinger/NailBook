@@ -7,8 +7,12 @@
     <string name="NewUser">New User</string>
     <string name="SigIn">SigIn</string>
     <string name="next">next</string>
+    <!-- Strings related to menu  -->
     <string name= "WorkDiary">Work Diary</string>
     <string name= "Treatments">Treatments</string>
+    <string name= "Wallet">Wallet</string>
+    <string name= "Logout">Logout</string>
+
     <string name="introduction">Choice user mode</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
