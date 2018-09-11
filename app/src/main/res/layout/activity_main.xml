@@ -30,7 +30,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_scrollFlags="enterAlways|scroll"   />
+            app:layout_scrollFlags="enterAlways|scroll"
+            android:theme="@style/MyActionBar"/>
 
     </android.support.design.widget.AppBarLayout>
 <LinearLayout

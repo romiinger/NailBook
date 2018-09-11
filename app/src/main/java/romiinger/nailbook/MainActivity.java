@@ -1,5 +1,6 @@
 package romiinger.nailbook;
 
+import android.graphics.Color;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        myFirebase = new FirebaseUtil();
 
         createToolBar();
         createNavigationView();
@@ -87,12 +88,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menu.add("").setIcon(R.drawable.ic_launcher_background);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_settings, menu);
+
+
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
-        return true;
+        switch (item.getItemId()) {
+            case R.id.logout_menu: {
+                FirebaseUtil.logOut();
+                return true;
+            }
+            case R.id.user_profile_menu:
+            {
+             User thisUser =FirebaseUtil.getUserProfile();
+             //Todo showProfile();
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -104,11 +119,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             case R.id.workDiary: {
                      //toDo new activity
-                       Toast.makeText(this,"coming soon available",Toast.LENGTH_LONG).show();
+                       Toast.makeText(this,"coming soon ",Toast.LENGTH_LONG).show();
                        break;
                   }
             case R.id.treatments: {
-                      Toast.makeText(this, "coming soon available", Toast.LENGTH_LONG).show();
+                      Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
                       //toDo new activity
                      break;
             }
@@ -181,5 +196,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
+        toolbar.setContentInsetStartWithNavigation(0);
     }
 }

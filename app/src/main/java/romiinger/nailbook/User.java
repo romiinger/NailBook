@@ -7,7 +7,11 @@ public class User
     private String phone;
     private String mail;
 
- public User(String name ,  String stId, String phone,String mail)
+    public User()
+    {
+        //toDo
+    }
+ public User(String name , String stId, String phone,String mail)
  {
      this.name= name;
      this.stId=stId;
