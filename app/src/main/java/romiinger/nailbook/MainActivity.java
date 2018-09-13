@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.os.Handler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -127,18 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                       //toDo new activity
                      break;
             }
-            case R.id.logout_menu: {
-                AuthUI.getInstance()
-                        .signOut(this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.d(TAG, "User logged out");
-                                FirebaseUtil.attachListener();
-                            }
-                        });
-                FirebaseUtil.detachListener();
-                return true;
-            }
 
         }
         return true;
@@ -172,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         FirebaseUtil.openFbReference("user",this);
         FirebaseUtil.attachListener();
-
+        getUserInstance();
     }
 
     private void createNavigationView()
@@ -197,5 +186,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
         toolbar.setContentInsetStartWithNavigation(0);
+    }
+    private void getUserInstance()
+    {
+        DatabaseReference ref=FirebaseUtil.getmDatabaseReference();
+        if(ref.child("name") == null)
+        {
+            String userId = ref.push().getKey();
+            User user = new User(userId);
+            setContentView(R.layout.user_activity);
+            ref.child(userId).setValue(user);        }
     }
 }
