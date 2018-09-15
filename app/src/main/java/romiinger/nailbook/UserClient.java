@@ -1,11 +1,11 @@
 package romiinger.nailbook;
 
-public class UserClient extends User
+public class UserClient extends MyUser
 {
 
     public UserClient(String name,String stId,String phone,String mail)
     {
-      super( name,stId,phone,mail);
+      super( name,phone,mail);
     }
 
     public void getAgendView(){

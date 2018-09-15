@@ -1,17 +1,20 @@
 package romiinger.nailbook;
 
-public class User
- {
-    private String name;
-    private String stId;
-    private String phone;
-    private String mail;
+import com.firebase.ui.auth.data.model.User;
 
-    public User()
+public class MyUser
+ {
+    private static String name;
+    private static String stId;
+    private static String phone;
+    private static String mail;
+
+
+    public MyUser(String userId)
     {
-        //toDo
+        this.stId= userId;
     }
- public User(String name , String stId, String phone,String mail)
+ public MyUser(String name , String phone,String mail)
  {
      this.name= name;
      this.stId=stId;

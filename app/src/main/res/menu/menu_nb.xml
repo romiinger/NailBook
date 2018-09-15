@@ -21,13 +21,7 @@
         app:showAsAction="ifRoom">
 
     </item>
-    <item
-        android:id="@+id/logout_menu"
-        android:title="Logout"
-        android:checkable="true"
-        android:icon="@drawable/treataments_icon"
-        app:showAsAction="ifRoom"
-        />
+
 
 </group>
 <group

@@ -4,7 +4,7 @@
     <string name="welcome">Welcome to NailBook</string>
     <string name="professional">Professional</string>
     <string name="Client">Client</string>
-    <string name="NewUser">New User</string>
+    <string name="NewUser">Create your NailBoook Account</string>
     <string name="SigIn">SigIn</string>
     <string name="next">next</string>
     <!-- Strings related to menu  -->
@@ -17,6 +17,8 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <!-- Strings related to login -->
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -41,7 +43,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="hint_name">Fullname</string>
+    <string name="hint_name">Full name</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_register">Not a member? Get registered in NailBook now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
@@ -58,4 +60,5 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="hiii">hiii</string>
     <string name="profile_menu">Profile</string>
+    <string name="register_activity_title">Register in NailBook</string>
 </resources>

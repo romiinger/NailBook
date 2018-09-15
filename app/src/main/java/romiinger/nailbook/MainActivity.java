@@ -1,5 +1,5 @@
 package romiinger.nailbook;
-
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProgressBar progressBar;
     private Toolbar toolbar;
     private DrawerLayout mdrawerLayout;
+    private MyUser myUser;
     private static final String TAG = "MyActivity";
 
     @Override
@@ -46,30 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         createToolBar();
         createNavigationView();
-
-        //myFirebase
-        //myFirebase.openFbReference("user",this);
-/*
-        //get firebase auth instance
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        auth = FirebaseAuth.getInstance();
-        //get current user
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d(TAG,"User is null?" + (user==null));
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d(TAG, "in onAuthStateChanged()");
-                if (user == null) {
-                    Log.d(TAG,"User no logIn, start new Intent: activity_login");
-                    // user auth state is changed - user is null
-                    // launch login activity
-                    Intent intent = new Intent(MainActivity.this, activity_login.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };*/
 
         //next Activity
         next = (Button)findViewById(R.id.next);
@@ -103,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.user_profile_menu:
             {
-             User thisUser =FirebaseUtil.getUserProfile();
+        //     User thisUser =FirebaseUtil.getUserProfile();
              //Todo showProfile();
             }
             default:
@@ -159,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume()
     {
         super.onResume();
-        FirebaseUtil.openFbReference("user",this);
+        FirebaseUtil.openFbReference("users",this);
         FirebaseUtil.attachListener();
+        Log.d(TAG,"Before get User Instance" );
+
         getUserInstance();
     }
 
@@ -189,12 +168,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void getUserInstance()
     {
-        DatabaseReference ref=FirebaseUtil.getmDatabaseReference();
-        if(ref.child("name") == null)
+        Log.d(TAG,"in getUserInstance()");
+        if(FirebaseUtil.getUserProfile())
         {
-            String userId = ref.push().getKey();
-            User user = new User(userId);
-            setContentView(R.layout.user_activity);
-            ref.child(userId).setValue(user);        }
+            Log.d(TAG,"User is Register");
+        }
+        else
+        {
+            Log.d(TAG,"User not Register, over tu user_activity");
+            Intent  intent=new Intent(MainActivity.this,activity_user.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+           // setContentView(R.layout.user_activity);
+           //check if this do user_activity FirebaseUtil.setUserProfile();
+        }
+
+        //FirebaseUtil.setUserProfile();
+
     }
 }
