@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<group
+    android:id="@+id/users_menu"
+    android:visible="true">
+    <item
+        android:id="@+id/workDiary"
+        android:title="@string/WorkDiary"
+        android:checkable="true"
+        android:icon="@drawable/agend_icon"
+        app:showAsAction="ifRoom">
+
+    </item>
+    <item
+        android:id="@+id/treatments"
+        android:title="@string/Treatments"
+        android:checkable="true"
+        android:icon="@drawable/treataments_icon"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+
+</group>
+<group
+    android:id="@+id/administrator_menu"
+    android:visible="false">
+    <item
+        android:id="@+id/Wallet"
+       android:title="Wallet"
+        android:checkable="true"
+        app:showAsAction="ifRoom"
+
+    />
+</group>
+</menu>
