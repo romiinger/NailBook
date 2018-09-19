@@ -13,18 +13,20 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.firebase.ui.auth.IdpResponse;
 import android.support.v7.app.AppCompatActivity;
 import static android.app.Activity.RESULT_OK;
 
-public class FirebaseUtil extends AppCompatActivity{
+public class FirebaseUtil {
     private static FirebaseDatabase mFirebaseDatabase;
     private static DatabaseReference mDatabaseReference;
     private static FirebaseAuth mFiebaseAuth;
@@ -33,11 +35,8 @@ public class FirebaseUtil extends AppCompatActivity{
     private static StorageReference mStorageRef;
     private static FirebaseUser mFirebaseUser;
     private static FirebaseAuth.AuthStateListener mAuthListener;
-    private static boolean isAdmin;
     private static final int RC_SIGN_IN = 123;
     private static Activity caller;
-    private static MyUser mUser;
-    private static boolean isSignIn=false;
 
     public FirebaseUtil()
     {
@@ -61,20 +60,13 @@ public class FirebaseUtil extends AppCompatActivity{
                     if (mFiebaseAuth.getCurrentUser() == null) {
                         Log.d(TAG,"Before signIn()");
                         FirebaseUtil.signIn();
-                    } else {
-                        String userId = firebaseAuth.getUid();
-                        checkAdmin(userId);
                     }
                     Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
-
                 }
             };
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
-       // getUserProfile();
-
     }
-
     private static void signIn() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -89,8 +81,6 @@ public class FirebaseUtil extends AppCompatActivity{
                 RC_SIGN_IN);
         Log.d(TAG,"SignIn sucess!!");
         Log.d(TAG,"before get user profile");
-
-
     }
 
     public static  void logOut()
@@ -113,73 +103,22 @@ public class FirebaseUtil extends AppCompatActivity{
     public static void detachListener() {
         mFiebaseAuth.removeAuthStateListener(mAuthListener);
     }
-    public static boolean getUserProfile()
-    {
-        Log.d(TAG,"in getUserProfile()");
 
+
+    public static DatabaseReference getmDatabaseReference() {
+        mDatabaseReference=FirebaseDatabase.getInstance().getReference();
+        Log.d(TAG,"mDatabaseReference=" + mDatabaseReference);
+        return mDatabaseReference;
+    }
+
+
+    public static FirebaseUser getmFirebaseUser() {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d(TAG,"mFirebaseUser="+ mFirebaseUser);
-        Log.d(TAG,"mFirebaseUser.getUid()" + mFirebaseUser.getUid());
-        if(mUser==null || mUser.getStId()==null)
-        {
-            mUser= new MyUser(mFirebaseUser.getUid());
-            DatabaseReference ref = mDatabaseReference.push();
-             ref.setValue(mUser.getStId());
-           return false;
-       }
-       return true;
+        return mFirebaseUser;
     }
-    public static void setUserProfile()
-    {
-        Log.d(TAG,"in setUserProfile()");
-        Log.d(TAG,"mUser.getStId()= "+mUser.getStId());
-        mDatabaseReference.child(mUser.getStId()).setValue(mUser);
-    }
-    private static void checkAdmin(String uid) {
-        FirebaseUtil.isAdmin = false;
-        DatabaseReference ref = mFirebaseDatabase.getReference().child("administrators").child(uid);
-        ChildEventListener listener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
-                Log.d(TAG, "you are in administrator");
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-        ref.addChildEventListener(listener);
-    }
-
     private static void connectStorage(String folderName)
     {
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference().child(folderName);
     }
-    public static boolean isIsAdmin() {
-        return isAdmin;
-    }
-
-    public static DatabaseReference getmDatabaseReference() {
-        return mDatabaseReference;
-    }
-
-
 }

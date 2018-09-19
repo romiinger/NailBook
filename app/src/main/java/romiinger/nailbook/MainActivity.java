@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public  boolean onNavigationItemSelected(MenuItem menuItem)
     {
+        getUserInstance();
         menuItem.setCheckable(true);
         menuItem.setChecked(true);
         switch (menuItem.getItemId())
@@ -140,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseUtil.attachListener();
         Log.d(TAG,"Before get User Instance" );
 
-        getUserInstance();
     }
 
     private void createNavigationView()
@@ -148,10 +148,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG," In Create NavigationView");
         mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+        /*
         if(FirebaseUtil.isIsAdmin() ==true)
         {
             navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
         }
+        */
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
                 R.string.drawer_open,R.string.drawer_close);
@@ -166,10 +168,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         toolbar.setContentInsetStartWithNavigation(0);
     }
+
     private void getUserInstance()
     {
+
         Log.d(TAG,"in getUserInstance()");
-        if(FirebaseUtil.getUserProfile())
+        if(UserAdapter.getUserProfile())
         {
             Log.d(TAG,"User is Register");
         }
@@ -187,4 +191,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //FirebaseUtil.setUserProfile();
 
     }
+
 }
