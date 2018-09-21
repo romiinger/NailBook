@@ -119,7 +119,8 @@
                 android:text="@string/NewUser"
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                />
 
         </LinearLayout>
 

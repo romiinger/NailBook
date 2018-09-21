@@ -2,14 +2,12 @@ package romiinger.nailbook;
 
 import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
+import java.util.Map;
 public class UserAdapter
 {
     private static MyUser mUser;
@@ -17,28 +15,43 @@ public class UserAdapter
     private static FirebaseUtil mFirebaseUtil=new FirebaseUtil();
     private static DatabaseReference mref,userRef;
     private static String muserUid;
-    private static Boolean isNewUser=true;
-    public static Boolean getUserProfile()
+    private static Boolean isNewUser;
+    public UserAdapter()
     {
-        userRef= FirebaseDatabase.getInstance().getReference().child("users");
-        Log.d(TAG,"mref= " + userRef );
+        this.isNewUser = true;
+        this.mUser = new MyUser(getUserProfile());
+        Log.d(TAG,"after getUserProfile initialize, mUser.getName=" + mUser.getName());
+    }
+
+    public static MyUser getUserProfile()
+    {
+        Log.d(TAG,"in getUserProfile() ");
+        userRef = FirebaseDatabase.getInstance().getReference().child("users");
         muserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG,"muserUid= " + muserUid );
-        mref =userRef.child(muserUid);
-        Log.d(TAG,"mref= " + mref );
+        mref = userRef.child(muserUid).child(muserUid);
+        Log.d(TAG,"before event listener");
         mref.addValueEventListener( new ValueEventListener() {
+            MyUser newUser;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                Log.d(TAG,"onDataChange");
                 if(!dataSnapshot.exists()) {
-                    Log.d(TAG,"user not exist");
-                    mUser= new MyUser(muserUid);
-                    //userRef = userRef.push();
-                    //userRef.setValue(mUser.getStId());
-                    isNewUser = false;
+                    newUser = new MyUser(muserUid);
+                     isNewUser = false;
                 }
                 else
                 {
+                    Log.d(TAG,"no new user ");
+                    //mUser = dataSnapshot.getValue(MyUser.class);
+                    Map<String, Object> value = (Map<String, Object>) dataSnapshot.getValue();
+                    String email = (String) value.get("mail");
+                    String name = (String) value.get("name");
+                    String phone = (String) value.get("phone");
+                    String id = (String) value.get("stId");
+                    MyUser userFromDb = new MyUser( name, phone,email,id);
+                    //UserAdapter.setUserProfile(userFromDb);
+                    newUser= new MyUser(userFromDb);
+                    Log.d(TAG,"mUser.getName()" + mUser.getName());
                     isNewUser = true;
                 }
             }
@@ -46,17 +59,31 @@ public class UserAdapter
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-
-       return isNewUser;
+        Log.d(TAG,"after event listener");
+        mUser= new MyUser();
+        return mUser;
     }
 
-    public static void setUserProfile()
+    public static void setUserProfile(MyUser user)
     {
-
         Log.d(TAG,"in setUserProfile()");
-        Log.d(TAG,"mUser.getStId()= "+mUser.getStId());
-        mref.child(mUser.getStId()).setValue(mUser);
+        Log.d(TAG,"mUser.getStId()= "+ getmUser().getStId());
+        mref.child(getmUser().getStId()).child(getmUser().getStId()).setValue(getmUser());
     }
+     public static Boolean isNewUser()
+     {
+         return isNewUser;
+     }
+
+    public static MyUser getmUser() {
+        Log.d(TAG, "in getmUser(), mUser.stID="+ mUser.getStId());
+        return mUser;
+    }
+
+    public static void setmUser(MyUser mUser) {
+        UserAdapter.mUser = mUser;
+    }
+
     /*
     private static void checkAdmin(String uid) {
         FirebaseUtil.isAdmin = false;

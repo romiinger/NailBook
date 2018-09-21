@@ -7,6 +7,10 @@
     <string name="NewUser">Create your NailBoook Account</string>
     <string name="SigIn">SigIn</string>
     <string name="next">next</string>
+    <!-- Strings related to profile user  -->
+    <string name= "profile_title">Profile</string>
+    <string name= "edit_Profile">Edit Profile</string>
+
     <!-- Strings related to menu  -->
     <string name= "WorkDiary">Work Diary</string>
     <string name= "Treatments">Treatments</string>

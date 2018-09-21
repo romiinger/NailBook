@@ -80,8 +80,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.user_profile_menu:
             {
-        //     User thisUser =FirebaseUtil.getUserProfile();
-             //Todo showProfile();
+                getUserInstance();
+                Log.d(TAG,"Start profile_activity");
+                Intent  intent=new Intent(MainActivity.this,ProfileUserActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
             default:
                 return super.onOptionsItemSelected(item);
@@ -173,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
 
         Log.d(TAG,"in getUserInstance()");
-        if(UserAdapter.getUserProfile())
+        UserAdapter userAdapter = new UserAdapter();
+        if(userAdapter.isNewUser())
         {
             Log.d(TAG,"User is Register");
         }
