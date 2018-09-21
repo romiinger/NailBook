@@ -8,50 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:482002338108:android:4b6c38112305b6a4",
-        "android_client_info": {
-          "package_name": "com.NailBookDB"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "482002338108-8kjmqc9aa97gldi9a1kseubgl76q7kg3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.NailBookDB",
-            "certificate_hash": "593e7a873f5af6592500a113ebd1660a93b0f520"
-          }
-        },
-        {
-          "client_id": "482002338108-3u5c1ij8htv5arth9ai0bte9crggvkbl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCfpM5fPm0M9H2B7Cfi49QVTraQcOfDsB4"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "482002338108-3u5c1ij8htv5arth9ai0bte9crggvkbl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:482002338108:android:42ebdfaef0d62513",
         "android_client_info": {
           "package_name": "romiinger.nailbook"
@@ -64,6 +20,14 @@
           "android_info": {
             "package_name": "romiinger.nailbook",
             "certificate_hash": "593e7a873f5af6592500a113ebd1660a93b0f520"
+          }
+        },
+        {
+          "client_id": "482002338108-90l7unk03omppmg4b8dutlmq2j30tbjl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "romiinger.nailbook",
+            "certificate_hash": "eb2097b68c4872ac158fa89be9db4bc5b9aecd57"
           }
         },
         {
