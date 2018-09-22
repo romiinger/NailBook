@@ -22,12 +22,14 @@ public class UserAdapterFirebase {
 
     public void addUser(MyUser user){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //DatabaseReference myRef = database.getReference("users").child(user.getStId()).child(user.getStId());
         DatabaseReference myRef = database.getReference("users").child(user.getStId());
+
         Map<String, Object> value = new HashMap<>();
-        value.put("stId",user.getStId());
         value.put("name",user.getName());
         value.put("phone",user.getPhone());
-        value.put("phone",user.getEmail());
+        value.put("email",user.getEmail());
+        value.put("stId",user.getStId());
         myRef.setValue(value);
 
         //myRef.setValue(student);
@@ -43,12 +45,11 @@ public class UserAdapterFirebase {
     public void getUserById(final GetUserByIdListener listener){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference myRef = database.getReference("users").child(userUid).child(userUid);
+        DatabaseReference myRef = database.getReference("users").child(userUid);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Student st = dataSnapshot.getValue(Student.class);
                 Log.d(TAG,"onDataChange");
                 if(!dataSnapshot.exists()) {
                     listener.onComplete(new MyUser(userUid));
@@ -58,11 +59,11 @@ public class UserAdapterFirebase {
                 {
                     Log.d(TAG,"no new user ");
                     Map<String, Object> value = (Map<String, Object>) dataSnapshot.getValue();
-                    String stId = (String) value.get("stId");
+                    String id = (String) value.get("id");
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
-                    String email = (String) value.get("mail");
-                    listener.onComplete(new MyUser(name,phone,email,stId));
+                    String email = (String) value.get("email");
+                    listener.onComplete(new MyUser(name,phone,email,id));
                 }
             }
 
@@ -89,11 +90,11 @@ public class UserAdapterFirebase {
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     //Student st = dataSnapshot.getValue(Student.class);
                     Map<String, Object> value = (Map<String, Object>) snap.getValue();
-                    String stId = (String) value.get("stId");
+                    String id = (String) value.get("id");
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    data.add(new MyUser(name,phone,email,stId));
+                    data.add(new MyUser(name,phone,email,id));
                 }
                 listener.onComplete(data);
             }

@@ -52,7 +52,8 @@ public class activity_user extends AppCompatActivity {
                     user = new MyUser(name,phone,email);
                     Log.d(TAG,"mUser.getStId() " +user.getStId());
                     Toast.makeText(getApplicationContext(), "Register Sucess", Toast.LENGTH_SHORT).show();
-                    UserAdapter.setUserProfile(user);
+                    UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+                    userAdapterFirebase.addUser(user);
                     Intent intent = new Intent(activity_user.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
