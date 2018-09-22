@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
+        getUserInstance();
         switch (item.getItemId()) {
             case R.id.logout_menu: {
                 FirebaseUtil.logOut();
@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.user_profile_menu:
             {
-                getUserInstance();
                 Log.d(TAG,"Start profile_activity");
                 Intent  intent=new Intent(MainActivity.this,ProfileUserActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -175,25 +174,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getUserInstance()
     {
+        UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
+        String muserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        Log.d(TAG,"in getUserInstance()");
-        UserAdapter userAdapter = new UserAdapter();
-        if(userAdapter.isNewUser())
-        {
-            Log.d(TAG,"User is Register");
-        }
-        else
-        {
-            Log.d(TAG,"User not Register, over tu user_activity");
-            Intent  intent=new Intent(MainActivity.this,activity_user.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-           // setContentView(R.layout.user_activity);
-           //check if this do user_activity FirebaseUtil.setUserProfile();
-        }
-
-        //FirebaseUtil.setUserProfile();
+        userAdapterFirebase.getUserById( new UserAdapterFirebase.GetUserByIdListener() {
+            @Override
+            public void onComplete(MyUser user) {
+                if(user.getName()!=null)
+                {
+                    Log.d(TAG,"User is Register");
+                }
+                else {
+                    Log.d(TAG, "User not Register, over tu user_activity");
+                    Intent intent = new Intent(MainActivity.this, activity_user.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+        //Log.d(TAG,"in getUserInstance()");
+        //UserAdapterFirebase userAdapter = new UserAdapterFirebase();
+        //if(userAdapter.isNewUser())
+        //{
+        //    Log.d(TAG,"User is Register");
+        //}
+        //else
+        //{
+        //    Log.d(TAG,"User not Register, over tu user_activity");
+        //    Intent  intent=new Intent(MainActivity.this,activity_user.class);
+        //    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //    startActivity(intent);
+        //    finish();
+        //   // setContentView(R.layout.user_activity);
+        //   //check if this do user_activity FirebaseUtil.setUserProfile();
 
     }
 

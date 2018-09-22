@@ -8,6 +8,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 public class UserAdapter
 {
     private static MyUser mUser;
@@ -19,24 +21,25 @@ public class UserAdapter
     public UserAdapter()
     {
         this.isNewUser = true;
-        this.mUser = new MyUser(getUserProfile());
+        getUserProfile();
         Log.d(TAG,"after getUserProfile initialize, mUser.getName=" + mUser.getName());
     }
 
-    public static MyUser getUserProfile()
+    public static void getUserProfile()
     {
         Log.d(TAG,"in getUserProfile() ");
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
         muserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mref = userRef.child(muserUid).child(muserUid);
         Log.d(TAG,"before event listener");
-        mref.addValueEventListener( new ValueEventListener() {
-            MyUser newUser;
+        ValueEventListener postListener = new ValueEventListener()
+         {
+           // MyUser newUser;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG,"onDataChange");
                 if(!dataSnapshot.exists()) {
-                    newUser = new MyUser(muserUid);
+                    mUser = new MyUser(muserUid);
                      isNewUser = false;
                 }
                 else
@@ -50,18 +53,20 @@ public class UserAdapter
                     String id = (String) value.get("stId");
                     MyUser userFromDb = new MyUser( name, phone,email,id);
                     //UserAdapter.setUserProfile(userFromDb);
-                    newUser= new MyUser(userFromDb);
+                    mUser= new MyUser(userFromDb);
                     Log.d(TAG,"mUser.getName()" + mUser.getName());
                     isNewUser = true;
+                    notifyAll();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        });
+        };
+        mref.addValueEventListener( postListener);
+
         Log.d(TAG,"after event listener");
-        mUser= new MyUser();
-        return mUser;
+        //mUser= new MyUser();
     }
 
     public static void setUserProfile(MyUser user)
