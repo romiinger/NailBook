@@ -175,8 +175,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void getUserInstance()
     {
         UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
-        String muserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         userAdapterFirebase.getUserById( new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
@@ -193,21 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
-        //Log.d(TAG,"in getUserInstance()");
-        //UserAdapterFirebase userAdapter = new UserAdapterFirebase();
-        //if(userAdapter.isNewUser())
-        //{
-        //    Log.d(TAG,"User is Register");
-        //}
-        //else
-        //{
-        //    Log.d(TAG,"User not Register, over tu user_activity");
-        //    Intent  intent=new Intent(MainActivity.this,activity_user.class);
-        //    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        //    startActivity(intent);
-        //    finish();
-        //   // setContentView(R.layout.user_activity);
-        //   //check if this do user_activity FirebaseUtil.setUserProfile();
+
 
     }
 

@@ -22,11 +22,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         Log.d(TAG,"profile activity start");
-        //UserAdapter userAdapter = new UserAdapter();
-       // MyUser user = userAdapter.getmUser();
         UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
-       // String muserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         userAdapterFirebase.getUserById(new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
@@ -36,6 +32,12 @@ public class ProfileUserActivity extends  AppCompatActivity {
                 TextView nameLayout = (TextView)findViewById(R.id.fullNameLayout);
                 String name = user.getName();
                 nameLayout.setText(name);
+                TextView emailLayout = (TextView)findViewById(R.id.emailLayout);
+                String email = user.getEmail();
+                emailLayout.setText(email);
+                TextView phoneLayout = (TextView)findViewById(R.id.phoneLayout);
+                String phone = user.getPhone();
+                phoneLayout.setText(phone);
             }
         });
 

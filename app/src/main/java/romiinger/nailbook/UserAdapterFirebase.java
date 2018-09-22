@@ -61,7 +61,7 @@ public class UserAdapterFirebase {
                     String stId = (String) value.get("stId");
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
-                    String email = (String) value.get("email");
+                    String email = (String) value.get("mail");
                     listener.onComplete(new MyUser(name,phone,email,stId));
                 }
             }
