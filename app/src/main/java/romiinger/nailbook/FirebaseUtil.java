@@ -106,7 +106,6 @@ public class FirebaseUtil {
 
 
     public static DatabaseReference getmDatabaseReference() {
-        mDatabaseReference=FirebaseDatabase.getInstance().getReference();
         Log.d(TAG,"mDatabaseReference=" + mDatabaseReference);
         return mDatabaseReference;
     }

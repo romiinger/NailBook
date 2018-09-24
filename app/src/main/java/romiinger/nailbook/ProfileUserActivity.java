@@ -1,5 +1,7 @@
 package romiinger.nailbook;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import android.content.Intent;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +19,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
 
     private static MyUser user;
     private static final String TAG = "ProfileUserActivity";
-
+    private DrawerLayout mdrawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,4 +50,12 @@ public class ProfileUserActivity extends  AppCompatActivity {
 
 
     }
-}
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(ProfileUserActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    }
+

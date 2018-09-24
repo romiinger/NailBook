@@ -18,12 +18,17 @@ import java.util.Map;
 
 public class UserAdapterFirebase {
     private static final String TAG = "UserAdapterFirebase";
-    private static Boolean isNewUser=true;
+    private  Boolean isNewUser=true;
+    private  FirebaseDatabase mdatabase;
+    private DatabaseReference myRef;
 
+    public UserAdapterFirebase()
+    {
+         mdatabase = FirebaseDatabase.getInstance();
+    }
     public void addUser(MyUser user){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //DatabaseReference myRef = database.getReference("users").child(user.getStId()).child(user.getStId());
-        DatabaseReference myRef = database.getReference("users").child(user.getStId());
+
+        myRef = mdatabase.getReference("users").child(user.getStId());
 
         Map<String, Object> value = new HashMap<>();
         value.put("name",user.getName());
@@ -35,17 +40,14 @@ public class UserAdapterFirebase {
         //myRef.setValue(student);
     }
 
-    public static Boolean isNewUser()
-    {
-        return isNewUser;
-    }
+
     public interface GetUserByIdListener{
         void onComplete(MyUser user);
     }
     public void getUserById(final GetUserByIdListener listener){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
         final String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference myRef = database.getReference("users").child(userUid);
+        myRef = mdatabase.getReference("users").child(userUid);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
