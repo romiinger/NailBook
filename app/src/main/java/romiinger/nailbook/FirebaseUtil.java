@@ -36,7 +36,8 @@ public class FirebaseUtil {
     private static FirebaseUser mFirebaseUser;
     private static FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 123;
-    private static Activity caller;
+    private static MainActivity caller;
+    private static  boolean isAdmin;
 
     public FirebaseUtil()
     {
@@ -46,7 +47,7 @@ public class FirebaseUtil {
     ;
     private static final String TAG = "FirebaseUtil";
 
-    public static void openFbReference(String ref, final Activity callerActivity) {
+    public static void openFbReference(String ref, final MainActivity callerActivity) {
         Log.d(TAG,"in openFbReference()");
         if (firebaseUtil == null) {
             Log.d(TAG,"new instance from firebase");
@@ -60,6 +61,12 @@ public class FirebaseUtil {
                     if (mFiebaseAuth.getCurrentUser() == null) {
                         Log.d(TAG,"Before signIn()");
                         FirebaseUtil.signIn();
+                    }
+                    else
+                    {
+                        Log.d(TAG,"user is login");
+                        String userId = mFiebaseAuth.getUid();
+                        checkAdmin(userId);
                     }
                     Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
                 }
@@ -120,4 +127,48 @@ public class FirebaseUtil {
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference().child(folderName);
     }
+
+    private static void checkAdmin(String uid) {
+        Log.d(TAG,"in checkAdmin");
+        FirebaseUtil.isAdmin = false;
+        DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
+        ChildEventListener listener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                FirebaseUtil.isAdmin = true;
+                caller.showMenu();
+                Log.d("Admin:", "you are in administrator");
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                FirebaseUtil.isAdmin = true;
+                caller.showMenu();
+                Log.d("Admin:", "you are in administrator");
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        ref.addChildEventListener(listener);
+    }
+
+
+    public static boolean isIsAdmin() {
+        Log.d(TAG,"isAdmin=" + isAdmin);
+        return isAdmin;
+    }
+
 }

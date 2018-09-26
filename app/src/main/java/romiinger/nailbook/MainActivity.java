@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         myFirebase = new FirebaseUtil();
 
         createToolBar();
-        createNavigationView();
+        //createNavigationView();
 
         //next Activity
         next = (Button)findViewById(R.id.next);
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseUtil.openFbReference("users",this);
         FirebaseUtil.attachListener();
         Log.d(TAG,"Before get User Instance" );
+        createNavigationView();
 
     }
 
@@ -151,12 +152,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG," In Create NavigationView");
         mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        /*
+
         if(FirebaseUtil.isIsAdmin() ==true)
         {
+            Log.d(TAG, "is administrator' show menu");
             navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
         }
-        */
+
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
                 R.string.drawer_open,R.string.drawer_close);
@@ -194,5 +196,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+    public void showMenu()
+    {
+        invalidateOptionsMenu();
 
+    }
 }
