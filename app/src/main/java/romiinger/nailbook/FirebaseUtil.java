@@ -44,7 +44,7 @@ public class FirebaseUtil {
 
     }
 
-    ;
+
     private static final String TAG = "FirebaseUtil";
 
     public static void openFbReference(String ref, final MainActivity callerActivity) {
@@ -92,6 +92,7 @@ public class FirebaseUtil {
 
     public static  void logOut()
     {
+        isAdmin=false;
         AuthUI.getInstance()
                 .signOut(caller)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -20,35 +20,43 @@ public class ProfileUserActivity extends  AppCompatActivity {
     private static MyUser user;
     private static final String TAG = "ProfileUserActivity";
     private DrawerLayout mdrawerLayout;
+    private Button btResetPassword ,btEditProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
-        Log.d(TAG,"profile activity start");
-        UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
+        Log.d(TAG, "profile activity start");
+        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
         userAdapterFirebase.getUserById(new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
                 Log.d("TAG", "got new student name:" + user.getName());
-                Log.d(TAG,"user=" + user);
-                Log.d(TAG,"user.getName()=" + user.getName() );
-                TextView nameLayout = (TextView)findViewById(R.id.fullNameLayout);
+                Log.d(TAG, "user=" + user);
+                Log.d(TAG, "user.getName()=" + user.getName());
+                TextView nameLayout = (TextView) findViewById(R.id.fullNameLayout);
                 String name = user.getName();
                 nameLayout.setText(name);
-                TextView emailLayout = (TextView)findViewById(R.id.emailLayout);
+                TextView emailLayout = (TextView) findViewById(R.id.emailLayout);
                 String email = user.getEmail();
                 emailLayout.setText(email);
-                TextView phoneLayout = (TextView)findViewById(R.id.phoneLayout);
+                TextView phoneLayout = (TextView) findViewById(R.id.phoneLayout);
                 String phone = user.getPhone();
                 phoneLayout.setText(phone);
             }
+
         });
 
+        //next Activity
+        //btResetPassword = (Button) findViewById(R.id.next);
+        //btResetPassword.setOnClickListener(new View.OnClickListener() {
 
-
-
-
-
+           // @Override
+            //public void onClick(View view) {
+                //setContentView(R.layout.activity_signup);
+                //setContentView(R.layout.activity_reset_password);
+            //}
+        //});
     }
     @Override
     public void onBackPressed()

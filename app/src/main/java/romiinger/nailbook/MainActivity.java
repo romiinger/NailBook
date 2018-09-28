@@ -158,6 +158,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d(TAG, "is administrator' show menu");
             navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
         }
+        else
+        {
+            Log.d(TAG,"the user is not administrator");
+            navigationView.getMenu().setGroupVisible(R.id.administrator_menu,false);
+
+        }
 
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
@@ -199,6 +205,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void showMenu()
     {
         invalidateOptionsMenu();
-
+        createNavigationView();
     }
 }

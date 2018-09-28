@@ -233,7 +233,7 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/btn_reset_password"
+                android:id="@+id/btnResetPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
