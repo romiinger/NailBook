@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onClick(View view) {
-                //setContentView(R.layout.activity_signup);
                 setContentView(R.layout.activity_login);
 
             }

@@ -41,7 +41,9 @@ public class FirebaseUtil {
 
     public FirebaseUtil()
     {
-
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFiebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFiebaseAuth.getCurrentUser();
     }
 
 
@@ -54,6 +56,7 @@ public class FirebaseUtil {
             firebaseUtil = new FirebaseUtil();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mFiebaseAuth = FirebaseAuth.getInstance();
+            mFirebaseUser = mFiebaseAuth.getCurrentUser();
             caller = callerActivity;
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
@@ -172,4 +175,18 @@ public class FirebaseUtil {
         return isAdmin;
     }
 
+    public void resetPassword(String newPassoword)
+    {
+        Log.d(TAG, "in resetPassword() ");
+
+        mFirebaseUser.updatePassword(newPassoword)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User password updated.");
+                        }
+                    }
+                });
+    }
 }

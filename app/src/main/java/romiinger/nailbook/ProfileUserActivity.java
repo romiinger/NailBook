@@ -48,19 +48,25 @@ public class ProfileUserActivity extends  AppCompatActivity {
         });
 
         //next Activity
-        //btResetPassword = (Button) findViewById(R.id.next);
-        //btResetPassword.setOnClickListener(new View.OnClickListener() {
+        btResetPassword = (Button) findViewById(R.id.btnResetPassword);
+        btResetPassword.setOnClickListener(new View.OnClickListener() {
 
-           // @Override
-            //public void onClick(View view) {
-                //setContentView(R.layout.activity_signup);
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"setContentView to resetPasswordActivity");
                 //setContentView(R.layout.activity_reset_password);
-            //}
-        //});
+                Intent  intent=new Intent(ProfileUserActivity.this,ResetPasswordActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
     @Override
     public void onBackPressed()
     {
+       // setContentView(R.layout.activity_main);
+
         Intent intent = new Intent(ProfileUserActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
