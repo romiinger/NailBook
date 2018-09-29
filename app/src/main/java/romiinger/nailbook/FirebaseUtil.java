@@ -38,6 +38,7 @@ public class FirebaseUtil {
     private static final int RC_SIGN_IN = 123;
     private static MainActivity caller;
     private static  boolean isAdmin;
+    private static final String TAG = "FirebaseUtil";
 
     public FirebaseUtil()
     {
@@ -47,7 +48,7 @@ public class FirebaseUtil {
     }
 
 
-    private static final String TAG = "FirebaseUtil";
+
 
     public static void openFbReference(String ref, final MainActivity callerActivity) {
         Log.d(TAG,"in openFbReference()");
