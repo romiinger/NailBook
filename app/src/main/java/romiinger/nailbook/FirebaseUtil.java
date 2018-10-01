@@ -1,5 +1,7 @@
 package romiinger.nailbook;
 import android.content.Intent;
+
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -12,9 +14,10 @@ import android.text.TextUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
  import com.google.firebase.auth.FirebaseUser;
-
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,23 +40,21 @@ public class FirebaseUtil {
     private static FirebaseAuth.AuthStateListener mAuthListener;
     private static final int RC_SIGN_IN = 123;
     private static MainActivity caller;
-    private static  boolean isAdmin;
+    private static boolean isAdmin;
     private static final String TAG = "FirebaseUtil";
+    private static boolean mTaskSuccesful = false;
 
-    public FirebaseUtil()
-    {
+    public FirebaseUtil() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFiebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFiebaseAuth.getCurrentUser();
     }
 
 
-
-
     public static void openFbReference(String ref, final MainActivity callerActivity) {
-        Log.d(TAG,"in openFbReference()");
+        Log.d(TAG, "in openFbReference()");
         if (firebaseUtil == null) {
-            Log.d(TAG,"new instance from firebase");
+            Log.d(TAG, "new instance from firebase");
             firebaseUtil = new FirebaseUtil();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mFiebaseAuth = FirebaseAuth.getInstance();
@@ -63,12 +64,10 @@ public class FirebaseUtil {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     if (mFiebaseAuth.getCurrentUser() == null) {
-                        Log.d(TAG,"Before signIn()");
+                        Log.d(TAG, "Before signIn()");
                         FirebaseUtil.signIn();
-                    }
-                    else
-                    {
-                        Log.d(TAG,"user is login");
+                    } else {
+                        Log.d(TAG, "user is login");
                         String userId = mFiebaseAuth.getUid();
                         checkAdmin(userId);
                     }
@@ -78,6 +77,7 @@ public class FirebaseUtil {
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
     }
+
     private static void signIn() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -90,13 +90,12 @@ public class FirebaseUtil {
                         .setAvailableProviders(providers)
                         .build(),
                 RC_SIGN_IN);
-        Log.d(TAG,"SignIn sucess!!");
-        Log.d(TAG,"before get user profile");
+        Log.d(TAG, "SignIn sucess!!");
+        Log.d(TAG, "before get user profile");
     }
 
-    public static  void logOut()
-    {
-        isAdmin=false;
+    public static void logOut() {
+        isAdmin = false;
         AuthUI.getInstance()
                 .signOut(caller)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -108,6 +107,7 @@ public class FirebaseUtil {
         FirebaseUtil.detachListener();
 
     }
+
     public static void attachListener() {
         mFiebaseAuth.addAuthStateListener(mAuthListener);
     }
@@ -118,7 +118,7 @@ public class FirebaseUtil {
 
 
     public static DatabaseReference getmDatabaseReference() {
-        Log.d(TAG,"mDatabaseReference=" + mDatabaseReference);
+        Log.d(TAG, "mDatabaseReference=" + mDatabaseReference);
         return mDatabaseReference;
     }
 
@@ -127,14 +127,14 @@ public class FirebaseUtil {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         return mFirebaseUser;
     }
-    private static void connectStorage(String folderName)
-    {
+
+    private static void connectStorage(String folderName) {
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference().child(folderName);
     }
 
     private static void checkAdmin(String uid) {
-        Log.d(TAG,"in checkAdmin");
+        Log.d(TAG, "in checkAdmin");
         FirebaseUtil.isAdmin = false;
         DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
         ChildEventListener listener = new ChildEventListener() {
@@ -172,12 +172,22 @@ public class FirebaseUtil {
 
 
     public static boolean isIsAdmin() {
-        Log.d(TAG,"isAdmin=" + isAdmin);
+        Log.d(TAG, "isAdmin=" + isAdmin);
         return isAdmin;
     }
 
-    public void resetPassword(String newPassoword)
+    public static boolean ismTaskSuccesful() {
+        return mTaskSuccesful;
+    }
+
+    public void taskSuccessful()
     {
+        mTaskSuccesful =true;
+    }
+
+
+    public void resetPassword(String newPassoword) {
+
         Log.d(TAG, "in resetPassword() ");
 
         mFirebaseUser.updatePassword(newPassoword)
@@ -185,9 +195,10 @@ public class FirebaseUtil {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "User password updated.");
+                            Log.d(TAG,"password is update");
                         }
                     }
                 });
+
     }
 }

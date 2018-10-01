@@ -63,8 +63,22 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 }
                 FirebaseUtil firebaseUtil = new FirebaseUtil();
                 firebaseUtil.resetPassword(password);
+                 Toast.makeText(getApplication(), "your password is update", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ResetPasswordActivity.this, ProfileUserActivity.class);
+                startActivity(intent);
+                 finish();
+
             }
         });
+    }
+    @Override
+    public void onBackPressed()
+    {
+        // setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(ResetPasswordActivity.this, ProfileUserActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
