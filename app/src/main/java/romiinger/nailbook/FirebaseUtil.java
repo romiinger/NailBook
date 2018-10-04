@@ -15,6 +15,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
  import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -60,25 +63,31 @@ public class FirebaseUtil {
             mFiebaseAuth = FirebaseAuth.getInstance();
             mFirebaseUser = mFiebaseAuth.getCurrentUser();
             caller = callerActivity;
+            final String _message;
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     if (mFiebaseAuth.getCurrentUser() == null) {
                         Log.d(TAG, "Before signIn()");
-                        FirebaseUtil.signIn();
+                        FirebaseUtil.signIn(new FirebaseListener()
+                        {
+                            @Override
+                            public void onComplete(String message) {
+                                Log.d("TAG", "SigIn completed:" + message);
+                            }
+                        });
                     } else {
                         Log.d(TAG, "user is login");
                         String userId = mFiebaseAuth.getUid();
                         checkAdmin(userId);
                     }
-                    Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
                 }
             };
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
     }
-
-    private static void signIn() {
+    private static void signIn(final FirebaseListener listener) {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
@@ -90,9 +99,9 @@ public class FirebaseUtil {
                         .setAvailableProviders(providers)
                         .build(),
                 RC_SIGN_IN);
-        Log.d(TAG, "SignIn sucess!!");
-        Log.d(TAG, "before get user profile");
+        listener.onComplete("SignIn sucess");
     }
+
 
     public static void logOut() {
         isAdmin = false;
@@ -176,29 +185,61 @@ public class FirebaseUtil {
         return isAdmin;
     }
 
-    public static boolean ismTaskSuccesful() {
-        return mTaskSuccesful;
-    }
 
-    public void taskSuccessful()
+
+    private boolean reauthenticateUser(String oldPassword, String email)
     {
-        mTaskSuccesful =true;
+        final boolean[] isReautherntica = new boolean[]{false};
+        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider.getCredential(email,oldPassword);
+        mFirebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User is re-authenticated.");
+                    isReautherntica[0] = true;
+                }
+                else
+                {
+                    Log.d(TAG,"User is not re-authenticated ");
+                }
+            }
+        });
+        Log.d(TAG, "isReautherntica= " + isReautherntica);
+        return isReautherntica[0];
+
     }
+    public interface FirebaseListener{
+        void onComplete(String message);
+    }
+    public void resetPassword(final String currrentPassoword, final String newPassoword, final FirebaseListener listener) {
 
-
-    public void resetPassword(String newPassoword) {
-
+        String email = mFirebaseUser.getEmail();
         Log.d(TAG, "in resetPassword() ");
+       if( reauthenticateUser(currrentPassoword,email))
+       {
+           mFirebaseUser.updatePassword(newPassoword)
+                   .addOnCompleteListener(new OnCompleteListener<Void>() {
+                       @Override
+                       public void onComplete(@NonNull Task<Void> task) {
+                           if (task.isSuccessful()) {
+                               Log.d("FirebaseUtil:","in onCompleteListener update password  ");
+                               listener.onComplete("password is update");
+                           }
+                           else
+                           {
 
-        mFirebaseUser.updatePassword(newPassoword)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG,"password is update");
-                        }
-                    }
-                });
+                               Log.d("FirebaseUtil:","in onCompleteListener failed password  "+ task.getResult());
+
+                               listener.onComplete("failed");
+                           }
+                       }
+                   });
+       }
+       else
+       {
+           listener.onComplete("Incorrect Current Password");
+       }
 
     }
 }

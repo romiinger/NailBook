@@ -49,6 +49,8 @@
     <string name="hint_email">Email</string>
     <string name="hintNewPassword">New Password</string>
     <string name="hint_password">Password</string>
+    <string name="currentPassword">Current Password</string>
+
     <string name="hint_name">Full name</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_reset_password">Reset Password</string>
