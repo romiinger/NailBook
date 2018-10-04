@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         myFirebase = new FirebaseUtil();
 
         createToolBar();
-        createNavigationView();
+        //createNavigationView();
 
         //next Activity
         next = (Button)findViewById(R.id.next);
@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onClick(View view) {
-                //setContentView(R.layout.activity_signup);
                 setContentView(R.layout.activity_login);
 
             }
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
+        getUserInstance();
         switch (item.getItemId()) {
             case R.id.logout_menu: {
                 FirebaseUtil.logOut();
@@ -80,8 +79,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.user_profile_menu:
             {
-        //     User thisUser =FirebaseUtil.getUserProfile();
-             //Todo showProfile();
+                Log.d(TAG,"Start profile_activity");
+                Intent  intent=new Intent(MainActivity.this,ProfileUserActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public  boolean onNavigationItemSelected(MenuItem menuItem)
     {
+        getUserInstance();
         menuItem.setCheckable(true);
         menuItem.setChecked(true);
         switch (menuItem.getItemId())
@@ -139,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseUtil.openFbReference("users",this);
         FirebaseUtil.attachListener();
         Log.d(TAG,"Before get User Instance" );
+        createNavigationView();
 
-        getUserInstance();
     }
 
     private void createNavigationView()
@@ -148,10 +151,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG," In Create NavigationView");
         mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+
         if(FirebaseUtil.isIsAdmin() ==true)
         {
+            Log.d(TAG, "is administrator' show menu");
             navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
         }
+        else
+        {
+            Log.d(TAG,"the user is not administrator");
+            navigationView.getMenu().setGroupVisible(R.id.administrator_menu,false);
+
+        }
+
         navigationView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
                 R.string.drawer_open,R.string.drawer_close);
@@ -166,25 +178,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         toolbar.setContentInsetStartWithNavigation(0);
     }
+
     private void getUserInstance()
     {
-        Log.d(TAG,"in getUserInstance()");
-        if(FirebaseUtil.getUserProfile())
-        {
-            Log.d(TAG,"User is Register");
-        }
-        else
-        {
-            Log.d(TAG,"User not Register, over tu user_activity");
-            Intent  intent=new Intent(MainActivity.this,activity_user.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-           // setContentView(R.layout.user_activity);
-           //check if this do user_activity FirebaseUtil.setUserProfile();
-        }
+        UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
+        userAdapterFirebase.getUserById( new UserAdapterFirebase.GetUserByIdListener() {
+            @Override
+            public void onComplete(MyUser user) {
+                if(user.getName()!=null)
+                {
+                    Log.d(TAG,"User is Register");
+                }
+                else {
+                    Log.d(TAG, "User not Register, over tu user_activity");
+                    Intent intent = new Intent(MainActivity.this, activity_user.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
 
-        //FirebaseUtil.setUserProfile();
 
+    }
+    public void showMenu()
+    {
+        invalidateOptionsMenu();
+        createNavigationView();
     }
 }
