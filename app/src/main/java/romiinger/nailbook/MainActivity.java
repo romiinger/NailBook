@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                       //toDo new activity
                      break;
             }
+            case R.id.Wallet: {
+
+            }
 
         }
         return true;

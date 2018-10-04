@@ -35,6 +35,7 @@ public class UserAdapterFirebase {
         value.put("phone",user.getPhone());
         value.put("email",user.getEmail());
         value.put("stId",user.getStId());
+        value.put("wallet",user.getWallet());
         myRef.setValue(value);
 
         //myRef.setValue(student);
@@ -65,7 +66,8 @@ public class UserAdapterFirebase {
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    listener.onComplete(new MyUser(name,phone,email,id));
+                    String wallet = (String) value.get("wallet");
+                    listener.onComplete(new MyUser(name,phone,email,id,wallet));
                 }
             }
 
@@ -96,7 +98,9 @@ public class UserAdapterFirebase {
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    data.add(new MyUser(name,phone,email,id));
+                    String wallet = (String) value.get("wallet");
+
+                    data.add(new MyUser(name,phone,email,id,wallet));
                 }
                 listener.onComplete(data);
             }

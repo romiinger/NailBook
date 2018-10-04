@@ -43,6 +43,9 @@ public class ProfileUserActivity extends  AppCompatActivity {
                 TextView phoneLayout = (TextView) findViewById(R.id.phoneLayout);
                 String phone = user.getPhone();
                 phoneLayout.setText(phone);
+                TextView walletLayout = (TextView)findViewById(R.id.walletLayout);
+                String wallet = user.getWallet();
+                walletLayout.setText(wallet);
             }
 
         });
