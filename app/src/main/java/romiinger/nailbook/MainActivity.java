@@ -108,8 +108,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                       //toDo new activity
                      break;
             }
-            case R.id.Wallet: {
-
+            case R.id.Client: {
+                Log.d(TAG,"Start ClientsActivity");
+                Intent  intent=new Intent(MainActivity.this,ClientsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
 
         }

@@ -28,8 +28,8 @@
     android:id="@+id/administrator_menu"
     android:visible="false">
     <item
-        android:id="@+id/Wallet"
-       android:title="Wallet"
+        android:id="@+id/Client"
+       android:title="Client"
         android:checkable="true"
         app:showAsAction="ifRoom"
 

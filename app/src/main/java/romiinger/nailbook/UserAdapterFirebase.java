@@ -38,7 +38,6 @@ public class UserAdapterFirebase {
         value.put("wallet",user.getWallet());
         myRef.setValue(value);
 
-        //myRef.setValue(student);
     }
 
 
@@ -96,6 +95,7 @@ public class UserAdapterFirebase {
                     Map<String, Object> value = (Map<String, Object>) snap.getValue();
                     String id = (String) value.get("id");
                     String name = (String) value.get("name");
+                    Log.d(TAG,"user name = "+ name);
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
                     String wallet = (String) value.get("wallet");
