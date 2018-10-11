@@ -18,16 +18,22 @@ import romiinger.nailbook.Class.Wallet;
 
 public class WalletAdapterFirebase {
 
-    private static final String TAG = "UserAdapterFirebase";
+    private static final String TAG = "WalletAdapterFirebase";
     private   FirebaseDatabase mdatabase;
-    private  DatabaseReference myRef;
 
     public WalletAdapterFirebase()
     {
         mdatabase = FirebaseDatabase.getInstance();
     }
+    public String getNewWalletId()
+    {
+        DatabaseReference myRef = mdatabase.getReference("wallet");
+        String walletId = myRef.push().getKey();
+        Log.d(TAG,"walletId= " + walletId);
+        return walletId;
+    }
     public void addWallet(Wallet wallet){
-        myRef = mdatabase.getReference("wallet").child(wallet.getWalletId());
+        DatabaseReference myRef = mdatabase.getReference("wallet").child(wallet.getWalletId());
         Map<String, Object> value = new HashMap<>();
         value.put("ammount",wallet.getAmmount());
         value.put("walletId",wallet.getWalletId());
@@ -36,7 +42,7 @@ public class WalletAdapterFirebase {
     }
 
     public interface GetWalletByClientIdListener{
-        void onComplete(Wallet wllet);
+        void onComplete(Wallet wallet);
     }
 
     public void getWalletByUserId(final String usId,final GetWalletByClientIdListener listener)
@@ -60,7 +66,7 @@ public class WalletAdapterFirebase {
     }
     public void getWalletList(final WalletListListener listener)
     {
-        myRef=mdatabase.getReference("wallet");
+        DatabaseReference  myRef=mdatabase.getReference("wallet");
         final List<Wallet> walletList = new ArrayList<>();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override

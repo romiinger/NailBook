@@ -26,8 +26,14 @@ public class UserAdapterFirebase {
     public UserAdapterFirebase()
     {
          mdatabase = FirebaseDatabase.getInstance();
+
     }
     public void addUser(MyUser user){
+
+        if(user.getStId() == null){
+            String stId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            user.setStId(stId);
+        }
 
         myRef = mdatabase.getReference("users").child(user.getStId());
 

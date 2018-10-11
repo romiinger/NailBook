@@ -6,8 +6,11 @@ public class MyUser
     private  String stId;
     private  String phone;
     private  String email;
-    private  String wallet;
-    public MyUser()
+    private  Wallet mWallet;
+    private  String wallet;//toDo replece this name to ammount
+
+
+   /* public MyUser()
     {
 
     }
@@ -15,11 +18,12 @@ public class MyUser
     {
         new MyUser(user.getName(),user.getPhone(),user.getEmail(),user.getStId(),user.getWallet());
     }
-
+*/
     public MyUser(String userId)
     {
-        this.stId= userId;
-        this.wallet="0";
+        this.setStId(userId);
+        this.wallet = "0";
+        this.mWallet = new Wallet(userId);
     }
 
      public MyUser(String name , String phone,String email)
@@ -27,11 +31,12 @@ public class MyUser
          this.name= name;
          this.phone = phone;
          this.email= email;
+         this.setStId(null);
      }
      public MyUser(String name , String phone,String email, String id, String wallet)
      {
          this.name= name;
-         this.stId=id;
+         this.setStId(id);
          this.phone = phone;
          this.email= email;
          this.wallet = wallet;
@@ -63,4 +68,7 @@ public class MyUser
      return this.email;
  }
 
-}
+     public void setStId(String stId) {
+         this.stId = stId;
+     }
+ }

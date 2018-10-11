@@ -1,9 +1,20 @@
 package romiinger.nailbook.Class;
 
+import romiinger.nailbook.Firebase.WalletAdapterFirebase;
+
 public class Wallet {
     private String ammount;
     private String walletId;
     private String userId;
+
+    public Wallet(String userId){
+        WalletAdapterFirebase walletAdapterFirebase = new WalletAdapterFirebase();
+        this.walletId = walletAdapterFirebase.getNewWalletId();
+        this.userId = userId;
+        this.ammount = "0";
+        walletAdapterFirebase.addWallet(this);
+    }
+
 
     public Wallet(Wallet wallet)
     {
