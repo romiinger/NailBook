@@ -1,4 +1,5 @@
 package romiinger.nailbook;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,7 @@ import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.content.Intent;
 import android.os.Handler;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.firebase.ui.auth.*;
+
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //createNavigationView();
 
         //next Activity
-        next = (Button)findViewById(R.id.next);
+        next = (Button) findViewById(R.id.next);
         next.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
@@ -69,18 +73,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return true;
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         getUserInstance();
         switch (item.getItemId()) {
             case R.id.logout_menu: {
                 FirebaseUtil.logOut();
                 return true;
             }
-            case R.id.user_profile_menu:
-            {
-                Log.d(TAG,"Start profile_activity");
-                Intent  intent=new Intent(MainActivity.this,ProfileUserActivity.class);
+            case R.id.user_profile_menu: {
+                Log.d(TAG, "Start profile_activity");
+                Intent intent = new Intent(MainActivity.this, ProfileUserActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
@@ -91,26 +95,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public  boolean onNavigationItemSelected(MenuItem menuItem)
-    {
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
         getUserInstance();
         menuItem.setCheckable(true);
         menuItem.setChecked(true);
-        switch (menuItem.getItemId())
-        {
+        switch (menuItem.getItemId()) {
             case R.id.workDiary: {
-                     //toDo new activity
-                       Toast.makeText(this,"coming soon ",Toast.LENGTH_LONG).show();
-                       break;
-                  }
+                //toDo new activity
+                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
+                break;
+            }
             case R.id.treatments: {
-                      Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
-                      //toDo new activity
-                     break;
+                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
+                //toDo new activity
+                break;
             }
             case R.id.Client: {
-                Log.d(TAG,"Start ClientsActivity");
-                Intent  intent=new Intent(MainActivity.this,ClientsActivity.class);
+                Log.d(TAG, "Start ClientsActivity");
+                Intent intent = new Intent(MainActivity.this, ClientsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
@@ -119,84 +121,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return true;
     }
-    private void showDrawer()
-    {
+
+    private void showDrawer() {
         mdrawerLayout.openDrawer(GravityCompat.START);
     }
-    private void hideDrawer()
-    {
+
+    private void hideDrawer() {
         mdrawerLayout.closeDrawer(GravityCompat.START);
     }
+
     @Override
-    public void onBackPressed()
-    {
-        if(mdrawerLayout.isDrawerOpen(GravityCompat.START))
-           hideDrawer();
+    public void onBackPressed() {
+        if (mdrawerLayout.isDrawerOpen(GravityCompat.START))
+            hideDrawer();
         else
             super.onBackPressed();
     }
 
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         FirebaseUtil.detachListener();
     }
-    protected void onResume()
-    {
+
+    protected void onResume() {
         super.onResume();
-        FirebaseUtil.openFbReference("users",this);
+        FirebaseUtil.openFbReference("users", this);
         FirebaseUtil.attachListener();
-        Log.d(TAG,"Before get User Instance" );
+        Log.d(TAG, "Before get User Instance");
         createNavigationView();
+
 
     }
 
-    private void createNavigationView()
-    {
-        Log.d(TAG," In Create NavigationView");
-        mdrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
+    private void createNavigationView() {
+        Log.d(TAG, " In Create NavigationView");
+        mdrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        if(FirebaseUtil.isIsAdmin() ==true)
-        {
+        if (FirebaseUtil.isIsAdmin() == true) {
             Log.d(TAG, "is administrator' show menu");
-            navigationView.getMenu().setGroupVisible(R.id.administrator_menu,true);
-        }
-        else
-        {
-            Log.d(TAG,"the user is not administrator");
-            navigationView.getMenu().setGroupVisible(R.id.administrator_menu,false);
+            navigationView.getMenu().setGroupVisible(R.id.administrator_menu, true);
+        } else {
+            Log.d(TAG, "the user is not administrator");
+            navigationView.getMenu().setGroupVisible(R.id.administrator_menu, false);
 
         }
 
         navigationView.setNavigationItemSelectedListener(this);
-        ActionBarDrawerToggle drawerToggle =  new ActionBarDrawerToggle(this,mdrawerLayout,toolbar,
-                R.string.drawer_open,R.string.drawer_close);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mdrawerLayout, toolbar,
+                R.string.drawer_open, R.string.drawer_close);
         mdrawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
-    private void createToolBar()
-    {
-        Log.d(TAG," In Create toolbar");
+
+    private void createToolBar() {
+        Log.d(TAG, " In Create toolbar");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
         toolbar.setContentInsetStartWithNavigation(0);
     }
 
-    private void getUserInstance()
-    {
-        UserAdapterFirebase userAdapterFirebase= new UserAdapterFirebase();
-        userAdapterFirebase.getUserById( new UserAdapterFirebase.GetUserByIdListener() {
+    private void getUserInstance() {
+        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+        userAdapterFirebase.getUserById(new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
-                if(user.getName()!=null)
-                {
-                    Log.d(TAG,"User is Register");
-                }
-                else {
+                if (user.getName() != null) {
+                    Log.d(TAG, "User is Register");
+                } else {
                     Log.d(TAG, "User not Register, over tu user_activity");
                     Intent intent = new Intent(MainActivity.this, activity_user.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -208,8 +203,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
-    public void showMenu()
-    {
+
+    public void showMenu() {
         invalidateOptionsMenu();
         createNavigationView();
     }

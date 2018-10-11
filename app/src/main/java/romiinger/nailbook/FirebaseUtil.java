@@ -87,6 +87,8 @@ public class FirebaseUtil {
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
     }
+
+
     private static void signIn(final FirebaseListener listener) {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -114,7 +116,6 @@ public class FirebaseUtil {
                     }
                 });
         FirebaseUtil.detachListener();
-
     }
 
     public static void attachListener() {

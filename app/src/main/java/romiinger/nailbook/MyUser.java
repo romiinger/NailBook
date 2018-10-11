@@ -4,11 +4,11 @@ import com.firebase.ui.auth.data.model.User;
 
 public class MyUser
  {
-    private static String name;
-    private static String stId;
-    private static String phone;
-    private static String email;
-    private static String wallet;
+    private  String name;
+    private  String stId;
+    private  String phone;
+    private  String email;
+    private  String wallet;
     public MyUser()
     {
 
@@ -39,12 +39,12 @@ public class MyUser
          this.wallet = wallet;
      }
 
-     public static String getWallet() {
+     public  String getWallet() {
          return wallet;
      }
 
-     public static void setWallet(String wallet) {
-         MyUser.wallet = wallet;
+     public void setWallet(String wallet) {
+         this.wallet = wallet;
      }
 
      public String getName()

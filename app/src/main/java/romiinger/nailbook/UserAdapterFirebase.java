@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,12 +85,11 @@ public class UserAdapterFirebase {
     public void getUsers(final GetUsersListener listener){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-
+        final List<MyUser> userList = new ArrayList<>();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                LinkedList<MyUser> data = new LinkedList<>();
-
+                userList.clear();;
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     //Student st = dataSnapshot.getValue(Student.class);
                     Map<String, Object> value = (Map<String, Object>) snap.getValue();
@@ -98,16 +98,20 @@ public class UserAdapterFirebase {
                     Log.d(TAG,"user name = "+ name);
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    String wallet = (String) value.get("wallet");
-
-                    data.add(new MyUser(name,phone,email,id,wallet));
+                    String wallet = (String) value.get("wallet").toString();
+                    MyUser newUser = new MyUser(name,phone,email,id,wallet);
+                    userList.add(newUser);
                 }
-                listener.onComplete(data);
+                for(int i=0; i<userList.size();i++)
+                {
+                    Log.d(TAG,"Contract user i:" + i +"name:" + userList.get(i).getName());
+                }
+                listener.onComplete(userList);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                listener.onComplete(null);
+               //listener.onComplete(null);
             }
         });
     }

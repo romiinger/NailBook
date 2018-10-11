@@ -10,23 +10,34 @@ import android.widget.TextView;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHolder>  {
+public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHolder>
+        implements Filterable {
 
-    private List<MyUser> userList;
-    private List<MyUser> contactListFiltered;
+    private static final String TAG = "ClientsAdapter";
+
+    private Context context;
+    private List<MyUser> clientList;
+    private List<MyUser> clientListFiltered;
     private ClientsAdapterListener listener;
 
 
-    public ClientsAdapter(List<MyUser> userList) {
-     this.userList = userList;
+    public ClientsAdapter(Context context, List<MyUser> clientList, ClientsAdapterListener listener) {
+        this.clientList = clientList;
+        for(int i=0; i<clientList.size();i++)
+        {
+            Log.d(TAG,"Contract user i:" + i +"name:" + clientList.get(i).getName());
+        }
+        this.context = context;
+        this.listener =listener;
+        this.clientListFiltered = clientList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        View itemView = LayoutInflater.from(context)
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.client_row, parent, false);
 
         return new MyViewHolder(itemView);
@@ -34,7 +45,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MyUser user = userList.get(position);
+        final MyUser user = clientListFiltered.get(position);
         Log.d("onBindViewHolder:","user.getName()"+ user.getName());
         holder.name.setText(user.getName());
         holder.email.setText(user.getEmail());
@@ -43,9 +54,43 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return clientListFiltered.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    clientListFiltered = clientList;
+                } else {
+                    List<MyUser> filteredList = new ArrayList<>();
+                    for (MyUser row : clientList) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getPhone().contains(charSequence)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    clientListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = clientListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                clientListFiltered = (ArrayList<MyUser>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
     public interface ClientsAdapterListener {
         void onClientSelected(MyUser user);
     }
@@ -62,9 +107,8 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHo
                 @Override
                 public void onClick(View view) {
                     // send selected contact in callback
-                    listener.onClientSelected(contactListFiltered.get(getAdapterPosition())); }
+                    listener.onClientSelected(clientListFiltered.get(getAdapterPosition())); }
             });
         }
     }
 }
-
