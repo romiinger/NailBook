@@ -1,26 +1,18 @@
-package romiinger.nailbook;
-import android.content.Intent;
+package romiinger.nailbook.Firebase;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
-import android.net.Uri;
+
 import java.util.*;
-import android.text.TextUtils;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
  import com.google.firebase.auth.FirebaseUser;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,9 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
 
-import com.firebase.ui.auth.IdpResponse;
-import android.support.v7.app.AppCompatActivity;
-import static android.app.Activity.RESULT_OK;
+import romiinger.nailbook.activitys.MainActivity;
 
 public class FirebaseUtil {
     private static FirebaseDatabase mFirebaseDatabase;

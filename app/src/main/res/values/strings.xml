@@ -74,4 +74,5 @@
     <string name="ContactsClient">Contacts Clients</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Search hunt</string>
+    <string name="ammount">ammount</string>
 </resources>

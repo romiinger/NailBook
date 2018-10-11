@@ -113,11 +113,13 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/wallet_Layout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:clickable="true">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -231,7 +233,8 @@
                 android:text="@string/edit_Profile"
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="invisible"/>/>
 
             <Button
                 android:id="@+id/btnResetPassword"
@@ -244,7 +247,8 @@
                 android:text="@string/btn_reset_password"
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="invisible"/>/>
 
         </LinearLayout>
     </LinearLayout>

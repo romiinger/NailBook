@@ -1,4 +1,4 @@
-package romiinger.nailbook;
+package romiinger.nailbook.Firebase;
 
 import android.util.Log;
 
@@ -11,9 +11,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import romiinger.nailbook.Class.MyUser;
 
 
 public class UserAdapterFirebase {

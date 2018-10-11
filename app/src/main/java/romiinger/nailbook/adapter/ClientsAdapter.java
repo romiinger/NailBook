@@ -1,4 +1,4 @@
-package romiinger.nailbook;
+package romiinger.nailbook.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,9 @@ import android.widget.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.R;
 
 public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.MyViewHolder>
         implements Filterable {

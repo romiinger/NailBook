@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activitys.MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,42 +23,44 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity_login"
+            android:name=".activitys.activity_login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
         <activity
-            android:name=".SignupActivity"
+            android:name=".activitys.SignupActivity"
             android:theme="@style/Theme.AppCompat.Light">
         </activity>
         <activity
-            android:name=".ResetPasswordActivity"
+            android:name=".activitys.ResetPasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".activity_user"
+            android:name=".activitys.activity_user"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".ProfileUserActivity"
+            android:name=".activitys.ProfileUserActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".ClientsActivity"
+            android:name=".activitys.ClientsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".activitys.WalletActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
 

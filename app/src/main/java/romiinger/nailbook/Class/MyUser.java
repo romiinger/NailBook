@@ -1,6 +1,4 @@
-package romiinger.nailbook;
-
-import com.firebase.ui.auth.data.model.User;
+package romiinger.nailbook.Class;
 
 public class MyUser
  {

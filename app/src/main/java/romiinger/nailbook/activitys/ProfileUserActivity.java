@@ -1,33 +1,32 @@
-package romiinger.nailbook;
+package romiinger.nailbook.activitys;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-
-import java.util.concurrent.TimeUnit;
+import romiinger.nailbook.Firebase.FirebaseUtil;
+import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.R;
+import romiinger.nailbook.Firebase.UserAdapterFirebase;
 
 public class ProfileUserActivity extends  AppCompatActivity {
 
-    private  MyUser user;
+    private MyUser myUser;
     private static final String TAG = "ProfileUserActivity";
     private DrawerLayout mdrawerLayout;
     private Button btResetPassword ,btEditProfile;
+    private LinearLayout walletLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         Log.d(TAG, "profile activity start");
-        //String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
         String userUid = null;
         Bundle b = getIntent().getExtras();
@@ -38,6 +37,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
         userAdapterFirebase.getUserById(userUid,new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
+                myUser=user;
                 Log.d("TAG", "got new student name:" + user.getName());
                 Log.d(TAG, "user=" + user);
                 Log.d(TAG, "user.getName()=" + user.getName());
@@ -56,21 +56,33 @@ public class ProfileUserActivity extends  AppCompatActivity {
             }
 
         });
-
-        //next Activity
+        walletLayout = (LinearLayout)findViewById(R.id.wallet_Layout);
+        walletLayout.setOnClickListener(new OnWalletClick());
         btResetPassword = (Button) findViewById(R.id.btnResetPassword);
-        btResetPassword.setOnClickListener(new View.OnClickListener() {
+        btEditProfile = (Button) findViewById(R.id.update_profil);
+        if(FirebaseUtil.isIsAdmin())
+        {
+            Log.d(TAG,"set buttons to administrator view");
 
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG,"setContentView to resetPasswordActivity");
-                //setContentView(R.layout.activity_reset_password);
-                Intent  intent=new Intent(ProfileUserActivity.this,ResetPasswordActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
+        }
+        else{
+            Log.d(TAG,"no administrator view");
+            btResetPassword.setVisibility(View.VISIBLE);
+            btEditProfile.setVisibility(View.VISIBLE);
+            btResetPassword.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG,"setContentView to resetPasswordActivity");
+                    //setContentView(R.layout.activity_reset_password);
+                    Intent  intent=new Intent(ProfileUserActivity.this,ResetPasswordActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+
     }
     @Override
     public void onBackPressed()
@@ -81,5 +93,22 @@ public class ProfileUserActivity extends  AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    private void onWalletClicked()
+    {
+        Log.d(TAG,"onWalletClicked");
+        Intent  intent=new Intent(ProfileUserActivity.this,WalletActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
+
+    class OnWalletClick implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            onWalletClicked();
+        }
+    }
+
+}
 
