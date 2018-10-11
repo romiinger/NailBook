@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProfileUserActivity extends  AppCompatActivity {
 
-    private static MyUser user;
+    private  MyUser user;
     private static final String TAG = "ProfileUserActivity";
     private DrawerLayout mdrawerLayout;
     private Button btResetPassword ,btEditProfile;
@@ -27,8 +27,15 @@ public class ProfileUserActivity extends  AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
         Log.d(TAG, "profile activity start");
+        //String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-        userAdapterFirebase.getUserById(new UserAdapterFirebase.GetUserByIdListener() {
+        String userUid = null;
+        Bundle b = getIntent().getExtras();
+        if(b != null) {
+            userUid = b.getString("userId");
+            Log.d(TAG,"after get extra, userUid = " + userUid );
+        }
+        userAdapterFirebase.getUserById(userUid,new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
                 Log.d("TAG", "got new student name:" + user.getName());

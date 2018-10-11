@@ -125,7 +125,14 @@ public class ClientsActivity extends AppCompatActivity
                 mAdapter = new ClientsAdapter(getApplicationContext(), myUserList, new ClientsAdapter.ClientsAdapterListener() {
                     @Override
                     public void onClientSelected(MyUser user) {
-                        Toast.makeText(getApplicationContext() ,"Selected: " + user.getName() + ", " + user.getPhone(), Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ClientsActivity.this, ProfileUserActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        Bundle b = new Bundle();
+                        b.putString("userId",user.getStId());
+                        intent.putExtras(b);
+                        startActivity(intent);
+                       // Toast.makeText(getApplicationContext() ,"Selected: " + user.getName() + ", " + user.getPhone(), Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 });
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

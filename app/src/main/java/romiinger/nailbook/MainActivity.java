@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void getUserInstance() {
         UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-        userAdapterFirebase.getUserById(new UserAdapterFirebase.GetUserByIdListener() {
+        userAdapterFirebase.getUserById(null,new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
                 if (user.getName() != null) {
