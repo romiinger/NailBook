@@ -9,8 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
+import romiinger.nailbook.Class.Wallet;
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.Firebase.WalletAdapterFirebase;
 import romiinger.nailbook.R;
 import romiinger.nailbook.Firebase.UserAdapterFirebase;
 
@@ -21,6 +23,9 @@ public class ProfileUserActivity extends  AppCompatActivity {
     private DrawerLayout mdrawerLayout;
     private Button btResetPassword ,btEditProfile;
     private LinearLayout walletLayout;
+    private Bundle bundle;
+    private String userIdBundle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +33,13 @@ public class ProfileUserActivity extends  AppCompatActivity {
         setContentView(R.layout.profile_activity);
         Log.d(TAG, "profile activity start");
         UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-        String userUid = null;
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            userUid = b.getString("userId");
-            Log.d(TAG,"after get extra, userUid = " + userUid );
+        userIdBundle = null;
+        bundle = getIntent().getExtras();
+        if(bundle != null) {
+            userIdBundle = bundle.getString("userId");
+            Log.d(TAG,"after get extra, userUid = " + userIdBundle );
         }
-        userAdapterFirebase.getUserById(userUid,new UserAdapterFirebase.GetUserByIdListener() {
+        userAdapterFirebase.getUserById(userIdBundle,new UserAdapterFirebase.GetUserByIdListener() {
             @Override
             public void onComplete(MyUser user) {
                 myUser=user;
@@ -50,9 +55,16 @@ public class ProfileUserActivity extends  AppCompatActivity {
                 TextView phoneLayout = (TextView) findViewById(R.id.phoneLayout);
                 String phone = user.getPhone();
                 phoneLayout.setText(phone);
-                TextView walletLayout = (TextView)findViewById(R.id.walletLayout);
-                String wallet = user.getWallet();
-                walletLayout.setText(wallet);
+                final TextView walletLayout = (TextView)findViewById(R.id.walletLayout);
+                //String wallet = user.getWallet();
+                //walletLayout.setText(wallet);
+                WalletAdapterFirebase walletAdapterFirebase = new WalletAdapterFirebase();
+                walletAdapterFirebase.getWalletByUserId(user.getStId(), new WalletAdapterFirebase.GetWalletByClientIdListener() {
+                    @Override
+                    public void onComplete(Wallet wallet) {
+                        walletLayout.setText(wallet.getAmmount());
+                    }
+                });
             }
 
         });
@@ -99,6 +111,12 @@ public class ProfileUserActivity extends  AppCompatActivity {
         Log.d(TAG,"onWalletClicked");
         Intent  intent=new Intent(ProfileUserActivity.this,WalletActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if(userIdBundle!=null)
+        {
+            Bundle b = new Bundle();
+            b.putString("userId",userIdBundle);
+            intent.putExtras(b);
+        }
         startActivity(intent);
         finish();
     }

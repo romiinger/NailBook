@@ -21,9 +21,9 @@ public class MyUser
 */
     public MyUser(String userId)
     {
-        this.setStId(userId);
-        this.wallet = "0";
-        this.mWallet = new Wallet(userId);
+        this.stId = userId;
+        //this.wallet = "0";
+        //this.mWallet = new Wallet(userId);
     }
 
      public MyUser(String name , String phone,String email)
@@ -31,14 +31,15 @@ public class MyUser
          this.name= name;
          this.phone = phone;
          this.email= email;
-         this.setStId(null);
+         this.stId = null;
+         this.mWallet = null;
      }
      public MyUser(String name , String phone,String email, String id, String wallet)
      {
-         this.name= name;
-         this.setStId(id);
+         this.name = name;
+         this.stId = id;
          this.phone = phone;
-         this.email= email;
+         this.email = email;
          this.wallet = wallet;
      }
 
@@ -70,5 +71,7 @@ public class MyUser
 
      public void setStId(String stId) {
          this.stId = stId;
+         this.mWallet=new Wallet(stId);
+         this.wallet = "0";
      }
  }

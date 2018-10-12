@@ -18,7 +18,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="12dp"
             android:background="@color/colorPrimary"
             android:orientation="vertical">
 
@@ -34,14 +33,14 @@
                 android:id="@+id/fullNameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="0sp"
-                android:layout_weight="1"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
                 android:text="Profile Name"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:background="@android:color/transparent"/>
+                android:textStyle="bold" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -117,9 +116,9 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:clickable="true"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:clickable="true">
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -234,7 +233,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
-                android:visibility="invisible"/>/>
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/btnResetPassword"

@@ -1,8 +1,10 @@
 package romiinger.nailbook.Firebase;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.*;
 
@@ -20,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
 
+import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.activitys.MainActivity;
+import romiinger.nailbook.activitys.activity_user;
 
 public class FirebaseUtil {
     private static FirebaseDatabase mFirebaseDatabase;
@@ -44,7 +48,7 @@ public class FirebaseUtil {
     }
 
 
-    public static void openFbReference(String ref, final MainActivity callerActivity) {
+    public static void openFbReference(String ref, final MainActivity callerActivity, final FirebaseListener listener) {
         Log.d(TAG, "in openFbReference()");
         if (firebaseUtil == null) {
             Log.d(TAG, "new instance from firebase");
@@ -53,7 +57,6 @@ public class FirebaseUtil {
             mFiebaseAuth = FirebaseAuth.getInstance();
             mFirebaseUser = mFiebaseAuth.getCurrentUser();
             caller = callerActivity;
-            final String _message;
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -64,6 +67,8 @@ public class FirebaseUtil {
                             @Override
                             public void onComplete(String message) {
                                 Log.d("TAG", "SigIn completed:" + message);
+                                String userId = mFiebaseAuth.getUid();
+                                checkAdmin(userId);
                             }
                         });
                     } else {
@@ -71,11 +76,12 @@ public class FirebaseUtil {
                         String userId = mFiebaseAuth.getUid();
                         checkAdmin(userId);
                     }
-                    //Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(caller.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
                 }
             };
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
+        listener.onComplete("Welcome back!");
     }
 
 
@@ -134,6 +140,21 @@ public class FirebaseUtil {
     }
 
     private static void checkAdmin(String uid) {
+        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+        userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
+            @Override
+            public void onComplete(MyUser user) {
+                if (user.getName() != null) {
+                    Log.d(TAG, "User is Register");
+                } else {
+                    Log.d(TAG, "User not Register, over tu user_activity");
+                    Intent intent = new Intent(caller, activity_user.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    caller.startActivity(intent);
+                    caller.finish();
+                }
+            }
+        });
         Log.d(TAG, "in checkAdmin");
         FirebaseUtil.isAdmin = false;
         DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        getUserInstance();
+        //getUserInstance();
         switch (item.getItemId()) {
             case romiinger.nailbook.R.id.logout_menu: {
                 FirebaseUtil.logOut();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        getUserInstance();
+        //getUserInstance();
         menuItem.setCheckable(true);
         menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
@@ -136,10 +136,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected void onResume() {
         super.onResume();
-        FirebaseUtil.openFbReference("users", this);
-        FirebaseUtil.attachListener();
-        Log.d(TAG, "Before get User Instance");
-        createNavigationView();
+        FirebaseUtil.openFbReference("users", this,new FirebaseUtil.FirebaseListener() {
+
+                    @Override
+                    public void onComplete(String message) {
+                       // Toast.makeText(getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
+                        FirebaseUtil.attachListener();
+                        Log.d(TAG, "Before get User Instance");
+                        createNavigationView();
+                    }
+                }
+        );
+
 
 
     }
@@ -195,6 +203,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void showMenu() {
         invalidateOptionsMenu();
-        createNavigationView();
+        //createNavigationView();
     }
 }

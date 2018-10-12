@@ -1,5 +1,6 @@
 package romiinger.nailbook.Firebase;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.activitys.activity_user;
 
 
 public class UserAdapterFirebase {
@@ -26,9 +28,13 @@ public class UserAdapterFirebase {
     public UserAdapterFirebase()
     {
          mdatabase = FirebaseDatabase.getInstance();
+         Log.d(TAG,"mdatabase= " + mdatabase);
 
     }
-    public void addUser(MyUser user){
+    public interface AddUserListener{
+        void onComplete();
+    }
+    public void addUser(MyUser user,final AddUserListener listener){
 
         if(user.getStId() == null){
             String stId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -44,6 +50,7 @@ public class UserAdapterFirebase {
         value.put("stId",user.getStId());
         value.put("wallet",user.getWallet());
         myRef.setValue(value);
+        listener.onComplete();
 
     }
 
@@ -60,7 +67,8 @@ public class UserAdapterFirebase {
             userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();}
         else
             userUid = usId;
-        myRef = mdatabase.getReference("users").child(userUid);
+        if(mdatabase.getReference("users").child(userUid)!= null)
+             myRef = mdatabase.getReference("users").child(userUid);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
