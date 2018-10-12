@@ -1,26 +1,20 @@
-package romiinger.nailbook;
-import android.content.Intent;
+package romiinger.nailbook.Firebase;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import android.net.Uri;
+
 import java.util.*;
-import android.text.TextUtils;
+
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
  import com.google.firebase.auth.FirebaseUser;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,9 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
 
-import com.firebase.ui.auth.IdpResponse;
-import android.support.v7.app.AppCompatActivity;
-import static android.app.Activity.RESULT_OK;
+import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.activitys.MainActivity;
+import romiinger.nailbook.activitys.activity_user;
 
 public class FirebaseUtil {
     private static FirebaseDatabase mFirebaseDatabase;
@@ -54,7 +48,7 @@ public class FirebaseUtil {
     }
 
 
-    public static void openFbReference(String ref, final MainActivity callerActivity) {
+    public static void openFbReference(String ref, final MainActivity callerActivity, final FirebaseListener listener) {
         Log.d(TAG, "in openFbReference()");
         if (firebaseUtil == null) {
             Log.d(TAG, "new instance from firebase");
@@ -63,7 +57,6 @@ public class FirebaseUtil {
             mFiebaseAuth = FirebaseAuth.getInstance();
             mFirebaseUser = mFiebaseAuth.getCurrentUser();
             caller = callerActivity;
-            final String _message;
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -74,6 +67,8 @@ public class FirebaseUtil {
                             @Override
                             public void onComplete(String message) {
                                 Log.d("TAG", "SigIn completed:" + message);
+                                String userId = mFiebaseAuth.getUid();
+                                checkAdmin(userId);
                             }
                         });
                     } else {
@@ -81,12 +76,15 @@ public class FirebaseUtil {
                         String userId = mFiebaseAuth.getUid();
                         checkAdmin(userId);
                     }
-                    //Toast.makeText(callerActivity.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(caller.getBaseContext(), "Welcome back!", Toast.LENGTH_LONG).show();
                 }
             };
         }
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
+        listener.onComplete("Welcome back!");
     }
+
+
     private static void signIn(final FirebaseListener listener) {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -114,7 +112,6 @@ public class FirebaseUtil {
                     }
                 });
         FirebaseUtil.detachListener();
-
     }
 
     public static void attachListener() {
@@ -143,6 +140,21 @@ public class FirebaseUtil {
     }
 
     private static void checkAdmin(String uid) {
+        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+        userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
+            @Override
+            public void onComplete(MyUser user) {
+                if (user.getName() != null) {
+                    Log.d(TAG, "User is Register");
+                } else {
+                    Log.d(TAG, "User not Register, over tu user_activity");
+                    Intent intent = new Intent(caller, activity_user.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    caller.startActivity(intent);
+                    caller.finish();
+                }
+            }
+        });
         Log.d(TAG, "in checkAdmin");
         FirebaseUtil.isAdmin = false;
         DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);

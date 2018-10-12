@@ -1,5 +1,7 @@
 package romiinger.nailbook;
 
+import romiinger.nailbook.Class.MyUser;
+
 public class UserClient extends MyUser
 {
 

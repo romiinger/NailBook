@@ -71,4 +71,10 @@
     <string name="hiii">hiii</string>
     <string name="profile_menu">Profile</string>
     <string name="register_activity_title">Register in NailBook</string>
+    <string name="ContactsClient">Contacts Clients</string>
+    <string name="action_search">Search</string>
+    <string name="search_hint">Search hunt</string>
+    <string name="ammount">ammount</string>
+    <string name="newCredit">input new credit</string>
+    <string name="btnAcredit">accredit</string>
 </resources>

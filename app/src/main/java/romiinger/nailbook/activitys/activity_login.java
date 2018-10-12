@@ -1,4 +1,4 @@
-package romiinger.nailbook;
+package romiinger.nailbook.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import android.util.Log;
+
+import romiinger.nailbook.R;
+
 public class activity_login extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;

@@ -1,23 +1,17 @@
-package romiinger.nailbook;
+package romiinger.nailbook.activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.R;
+import romiinger.nailbook.Firebase.UserAdapterFirebase;
 
 public class activity_user extends AppCompatActivity {
 
@@ -53,11 +47,16 @@ public class activity_user extends AppCompatActivity {
                     Log.d(TAG,"mUser.getStId() " +user.getStId());
                     Toast.makeText(getApplicationContext(), "Register Sucess", Toast.LENGTH_SHORT).show();
                     UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-                    userAdapterFirebase.addUser(user);
-                    Intent intent = new Intent(activity_user.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+                    userAdapterFirebase.addUser(user, new UserAdapterFirebase.AddUserListener() {
+                        @Override
+                        public void onComplete() {
+                            Intent intent = new Intent(activity_user.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
                 }
                 else
                 {
