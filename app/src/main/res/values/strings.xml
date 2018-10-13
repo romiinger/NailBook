@@ -77,4 +77,7 @@
     <string name="ammount">ammount</string>
     <string name="newCredit">input new credit</string>
     <string name="btnAcredit">accredit</string>
+    <string name="hint_treatment">name</string>
+    <string name="duration">duration</string>
+    <string name="price">price</string>
 </resources>

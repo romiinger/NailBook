@@ -1,6 +1,7 @@
 package romiinger.nailbook;
 
 import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.Class.Treatments;
 
 public class UserProfessional extends MyUser
 {
@@ -12,6 +13,6 @@ public class UserProfessional extends MyUser
     {
         super( name,phone,mail);
         this.agent = new WorkDiary();
-        this.treatments = new Treatments();
+       // this.treatments = new Treatments();
     }
 }

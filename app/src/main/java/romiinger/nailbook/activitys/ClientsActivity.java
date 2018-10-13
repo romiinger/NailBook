@@ -99,14 +99,14 @@ public class ClientsActivity extends AppCompatActivity
                finish();
            }
 
-           private void whiteNotificationBar(View view) {
+           /*private void whiteNotificationBar(View view) {
                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                    int flags = view.getSystemUiVisibility();
                    flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                    view.setSystemUiVisibility(flags);
                    getWindow().setStatusBarColor(Color.WHITE);
                }
-           }
+           }*/
     @Override
     public void onResume()
     {

@@ -95,8 +95,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case romiinger.nailbook.R.id.treatments: {
-                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
-                //toDo new activity
+                Log.d(TAG, "Start TreatmentsActivity");
+                Intent intent = new Intent(MainActivity.this, TreatmentsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
                 break;
             }
             case romiinger.nailbook.R.id.Client: {
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+                break;
             }
 
         }
