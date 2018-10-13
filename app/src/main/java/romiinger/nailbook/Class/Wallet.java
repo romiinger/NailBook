@@ -21,7 +21,6 @@ public class Wallet {
         walletAdapterFirebase.addWallet(this);
     }
 
-
     public Wallet(Wallet wallet)
     {
         new Wallet(wallet.getAmmount(),wallet.getWalletId(),wallet.getUserId());
