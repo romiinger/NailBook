@@ -20,6 +20,10 @@ import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;
 import romiinger.nailbook.Firebase.UserAdapterFirebase;
+import romiinger.nailbook.activitys.Treatments.TreatmentsActivity;
+import romiinger.nailbook.activitys.User.ClientsActivity;
+import romiinger.nailbook.activitys.User.ProfileUserActivity;
+import romiinger.nailbook.activitys.User.activity_user;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,16 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         createToolBar();
         //createNavigationView();
 
-        //next Activity
-        next = (Button) findViewById(romiinger.nailbook.R.id.next);
-        next.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                setContentView(romiinger.nailbook.R.layout.activity_login);
-
-            }
-        });
     }
 
     @Override
@@ -95,8 +89,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
             case romiinger.nailbook.R.id.treatments: {
-                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
-                //toDo new activity
+                Log.d(TAG, "Start TreatmentsActivity");
+                Intent intent = new Intent(MainActivity.this, TreatmentsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
                 break;
             }
             case romiinger.nailbook.R.id.Client: {
@@ -105,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+                break;
             }
 
         }

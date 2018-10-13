@@ -17,9 +17,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import romiinger.nailbook.R;
+import romiinger.nailbook.activitys.User.ResetPasswordActivity;
 
 public class SignupActivity extends AppCompatActivity {
-
+/*
     private EditText inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private ProgressBar progressBar;
@@ -106,4 +107,5 @@ public class SignupActivity extends AppCompatActivity {
         super.onResume();
         progressBar.setVisibility(View.GONE);
     }
+    */
 }

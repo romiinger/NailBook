@@ -1,4 +1,4 @@
-package romiinger.nailbook;
+package romiinger.nailbook.activitys.Utils;
 
 import android.app.Application;
 import android.text.TextUtils;

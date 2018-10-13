@@ -1,4 +1,4 @@
-package romiinger.nailbook.activitys;
+package romiinger.nailbook.activitys.Wallet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Firebase.UserAdapterFirebase;
 import romiinger.nailbook.Firebase.WalletAdapterFirebase;
 import romiinger.nailbook.R;
+import romiinger.nailbook.activitys.User.ProfileUserActivity;
 
 public class WalletActivity extends AppCompatActivity {
 

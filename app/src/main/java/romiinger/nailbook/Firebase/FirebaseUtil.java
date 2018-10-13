@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.*;
 
@@ -24,7 +23,7 @@ import com.google.firebase.storage.*;
 
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.activitys.MainActivity;
-import romiinger.nailbook.activitys.activity_user;
+import romiinger.nailbook.activitys.User.activity_user;
 
 public class FirebaseUtil {
     private static FirebaseDatabase mFirebaseDatabase;

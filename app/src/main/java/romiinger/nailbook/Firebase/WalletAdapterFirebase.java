@@ -86,9 +86,6 @@ public class WalletAdapterFirebase {
                     Wallet newWallet = new Wallet(ammount, walletId, userId);
                     walletList.add(newWallet);
                 }
-                for (int i = 0; i < walletList.size(); i++) {
-                    Log.d(TAG, "Wallet  i: " + i + "wallet id: " + walletList.get(i).getWalletId());
-                }
                 listener.onComplete(walletList);
             }
 
