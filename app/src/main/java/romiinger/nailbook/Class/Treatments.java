@@ -1,17 +1,20 @@
 package romiinger.nailbook.Class;
 
+
 public class Treatments {
 
     private String name;
     private String id;
     private String price;
     private String duration;
-    public Treatments(String name , String id , String price, String duration)
+    private String description;
+    public Treatments(String id, String name , String description, String price, String duration)
     {
         this.name = name;
-        this.id = id;
+        this.description = description;
         this.price = price;
         this.duration = duration;
+        this.id = id;
     }
 
     public String getName() {
@@ -44,5 +47,13 @@ public class Treatments {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

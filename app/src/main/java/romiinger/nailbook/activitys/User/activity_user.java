@@ -1,4 +1,4 @@
-package romiinger.nailbook.activitys;
+package romiinger.nailbook.activitys.User;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;
 import romiinger.nailbook.Firebase.UserAdapterFirebase;
+import romiinger.nailbook.activitys.MainActivity;
 
 public class activity_user extends AppCompatActivity {
 

@@ -32,19 +32,19 @@
             android:theme="@style/Theme.AppCompat.Light">
         </activity>
         <activity
-            android:name=".activitys.ResetPasswordActivity"
+            android:name=".activitys.User.ResetPasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".activitys.activity_user"
+            android:name=".activitys.User.activity_user"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".activitys.ProfileUserActivity"
+            android:name=".activitys.User.ProfileUserActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".activitys.TreatmentsActivity"
+            android:name=".activitys.Treatments.TreatmentsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
@@ -55,7 +55,7 @@
         </activity>
 
         <activity
-            android:name=".activitys.ClientsActivity"
+            android:name=".activitys.User.ClientsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
@@ -66,7 +66,7 @@
         </activity>
 
         <activity
-            android:name=".activitys.WalletActivity"
+            android:name=".activitys.Wallet.WalletActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <meta-data
                 android:name="android.app.searchable"
@@ -76,6 +76,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activitys.Treatments.NewTreatmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".activitys.Treatments.TreatmentViewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

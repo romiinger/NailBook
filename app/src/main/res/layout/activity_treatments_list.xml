@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".activitys.TreatmentsActivity">
+        tools:context=".activitys.Treatments.TreatmentsActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".activitys.TreatmentsActivity">
+                tools:context=".activitys.Treatments.TreatmentsActivity">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvTreatments"
@@ -80,15 +80,16 @@
 
         </LinearLayout>
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/newTreatment"
+            android:id="@+id/newTreatmentIcon"
             android:layout_width="wrap_content"
+            android:background="@color/colorPrimary"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:srcCompat="@drawable/baseline_add_black_18dp" />
     </android.support.design.widget.CoordinatorLayout>
 
 

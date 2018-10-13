@@ -19,7 +19,7 @@ import android.util.Log;
 import romiinger.nailbook.R;
 
 public class activity_login extends AppCompatActivity {
-
+/*
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
     private ProgressBar progressBar;
@@ -118,4 +118,5 @@ public class activity_login extends AppCompatActivity {
             }
         });
     }
+    */
 }

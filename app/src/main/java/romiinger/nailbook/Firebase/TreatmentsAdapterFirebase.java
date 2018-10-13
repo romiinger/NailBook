@@ -1,7 +1,10 @@
 package romiinger.nailbook.Firebase;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,14 +37,31 @@ public class TreatmentsAdapterFirebase  {
         Log.d(TAG, "treatmentd= " + treatmentId);
         return treatmentId;
     }
-    public void addTreatment(Treatments treatment) {
+    public interface GetAddTreatmentListener{
+        void onComplete(boolean onSucess);
+    }
+    public void addTreatment(Treatments treatment, final GetAddTreatmentListener listener) {
         DatabaseReference myRef = mdatabase.getReference("treatments").child(treatment.getId());
         Map<String, Object> value = new HashMap<>();
         value.put("name", treatment.getName());
+        value.put("description" , treatment.getDescription());
         value.put("id", treatment.getId());
         value.put("price", treatment.getPrice());
         value.put("duration" , treatment.getDuration());
-        myRef.setValue(value);
+        myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+               listener.onComplete(true);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Exception to push data " + e);
+                        listener.onComplete(false);
+                    }
+                });
+
     }
 
     public interface GetTreatmentByIdListener {
@@ -77,10 +97,11 @@ public class TreatmentsAdapterFirebase  {
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Map<String, Object> value = (Map<String, Object>) snap.getValue();
                     String name = (String) value.get("name");
+                    String description = (String) value.get("description");
                     String id = (String) value.get("id");
                     String price = (String) value.get("price");
                     String duration = (String) value.get("duration");
-                    Treatments newTreatament = new Treatments(name,id,price,duration);
+                    Treatments newTreatament = new Treatments(id,name,description,price,duration);
                     treatmentsList.add(newTreatament);
                 }
                 listener.onComplete(treatmentsList);

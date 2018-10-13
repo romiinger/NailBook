@@ -1,9 +1,7 @@
-package romiinger.nailbook.activitys;
+package romiinger.nailbook.activitys.User;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
@@ -20,6 +17,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import romiinger.nailbook.activitys.MainActivity;
 import romiinger.nailbook.adapter.ClientsAdapter;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;

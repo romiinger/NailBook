@@ -48,8 +48,8 @@ public class TreatmentsAdapter extends RecyclerView.Adapter<TreatmentsAdapter.My
         final Treatments treatment = treatmentsListFiltered.get(position);
         Log.d("onBindViewHolder:","treatment.getName()"+ treatment.getName());
         holder.name.setText(treatment.getName());
-        holder.duration.setText(treatment.getDuration());
-        holder.price.setText(treatment.getPrice());
+        holder.duration.setText(treatment.getDuration()+ " minutes");
+        holder.price.setText(treatment.getPrice() + " ₪");
     }
 
     @Override

@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".activitys.WalletActivity">
+        tools:context=".activitys.Wallet.WalletActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -188,7 +188,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:context=".activitys.ClientsActivity">
+                tools:context=".activitys.User.ClientsActivity">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvWalletUpdates"

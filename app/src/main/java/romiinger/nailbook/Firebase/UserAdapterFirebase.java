@@ -1,6 +1,5 @@
 package romiinger.nailbook.Firebase;
 
-import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import romiinger.nailbook.Class.MyUser;
-import romiinger.nailbook.activitys.activity_user;
 
 
 public class UserAdapterFirebase {
