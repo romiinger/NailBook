@@ -34,7 +34,7 @@ public class TreatmentsAdapterFirebase  {
     public String getNewTreatmentId() {
         DatabaseReference myRef = mdatabase.getReference("treatments");
         String treatmentId = myRef.push().getKey();
-        Log.d(TAG, "treatmentd= " + treatmentId);
+        Log.d(TAG, "treatmentId= " + treatmentId);
         return treatmentId;
     }
     public interface GetAddTreatmentListener{

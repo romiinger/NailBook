@@ -10,10 +10,12 @@ public class WorkDay {
     private Time openHour;
     private Time closeHour;
     private List<LimitationEvent> limitationEventList;
+    private String id;
 
 
-    public WorkDay(Date date, Time openHour , Time closeHour)
+    public WorkDay(String id, Date date, Time openHour , Time closeHour)
     {
+        this.id = id;
         this.date = date;
         this.openHour = openHour;
         this.closeHour = closeHour;
@@ -49,5 +51,13 @@ public class WorkDay {
 
     public void setLimitationEventList(List<LimitationEvent> limitationEventList) {
         this.limitationEventList = limitationEventList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

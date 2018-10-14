@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.util.Log;
 import android.widget.Toast;
 
+import romiinger.nailbook.CustomCalendarActivity;
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;
@@ -85,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()) {
             case romiinger.nailbook.R.id.workDiary: {
                 //toDo new activity
-                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, CustomCalendarActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                //Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
                 break;
             }
             case romiinger.nailbook.R.id.treatments: {

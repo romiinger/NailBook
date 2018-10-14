@@ -85,6 +85,11 @@
             android:name=".activitys.Treatments.TreatmentViewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+        <activity
+            android:name=".CustomCalendarActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>
