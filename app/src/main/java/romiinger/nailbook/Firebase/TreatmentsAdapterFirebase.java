@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,36 @@ public class TreatmentsAdapterFirebase  {
 
     }
 
+    public interface GetMaxDurationTreatmentListener {
+        void onComplete(Treatments maxDurationTreatment);
+    }
+    public void getMaxDurationTreatment(final GetMaxDurationTreatmentListener listener){
+        getTreatmentsList(new GetTreatmentListListener() {
+            @Override
+            public void onComplete(List<Treatments> treatmentsList) {
+
+               /* int maxMinutes=0;
+                Treatments maxDurationTreatment= null;
+                for(int i=0;i<treatmentsList.size();i++){
+                    String sMinutes =treatmentsList.get(i).getDuration();
+                    int minutes = Integer.parseInt(sMinutes);
+                    if(minutes > maxMinutes)
+                    {
+                        maxDurationTreatment = treatmentsList.get(i);
+                        maxMinutes = minutes;
+                    }
+                }
+                */
+               for(int i=0; i< treatmentsList.size();i++)
+               {
+                   Log.d(TAG,"treatmentlist i= " + i+" duration= "+treatmentsList.get(i).getDuration());
+               }
+               Treatments maxDuration = treatmentsList.get(treatmentsList.size() -1);
+               Log.d(TAG,"treatment with max duraion = "+ maxDuration.getDuration());
+                listener.onComplete(maxDuration);
+            }
+        });
+    }
     public interface GetTreatmentByIdListener {
         void onComplete(Treatments treatment);
     }
@@ -104,6 +135,7 @@ public class TreatmentsAdapterFirebase  {
                     Treatments newTreatament = new Treatments(id,name,description,price,duration);
                     treatmentsList.add(newTreatament);
                 }
+                Collections.sort(treatmentsList);
                 listener.onComplete(treatmentsList);
             }
 

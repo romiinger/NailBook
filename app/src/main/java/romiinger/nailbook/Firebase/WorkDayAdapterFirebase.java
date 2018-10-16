@@ -20,6 +20,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import romiinger.nailbook.Class.Appointment;
+import romiinger.nailbook.Class.ScheduleAppointment;
 import romiinger.nailbook.Class.WorkDay;
 
 public class WorkDayAdapterFirebase {
@@ -39,10 +42,10 @@ public class WorkDayAdapterFirebase {
         return workDayId;
     }
     public interface GetAddWorkDayListener{
-        void onComplete(boolean onSucess);
+        void onComplete(List<Appointment> emptyAppointments);
     }
 
-    public void addWorkDay(WorkDay workDay, final GetAddWorkDayListener listener) {
+    public void addWorkDay(final WorkDay workDay, final GetAddWorkDayListener listener) {
         DatabaseReference myRef = mdatabase.getReference(TABLE_DATABASE).child(workDay.getId());
         Map<String, Object> value = new HashMap<>();
         value.put("date", workDay.getDate());
@@ -52,17 +55,21 @@ public class WorkDayAdapterFirebase {
         myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                listener.onComplete(true);
+                ScheduleAppointment scheduleAppointment = new ScheduleAppointment();
+                scheduleAppointment.getEmptyAppointments(workDay.getDate(), new ScheduleAppointment.GetDatesToAppointmentListener() {
+                    @Override
+                    public void onComplete(List<Appointment> emptyAppointments) {
+                        listener.onComplete(emptyAppointments);                    }
+                });
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "Exception to push data " + e);
-                        listener.onComplete(false);
+                        listener.onComplete(null);
                     }
                 });
-
     }
 
     public interface GetWorkDayListListener{
@@ -78,11 +85,11 @@ public class WorkDayAdapterFirebase {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Map<String, Object> value = (Map<String, Object>) snap.getValue();
-                    Date dateFromDatabase= (Date) value.get("date");
-                     Time openHour = (Time) value.get("openHour");
-                     Time closeHour =(Time) value.get("closeHour");
-                     String id =(String) value.get("id");
-                     WorkDay workDay = new WorkDay(id,dateFromDatabase,openHour,closeHour );
+                    String date = value.get("date").toString();
+                    String openHour = value.get("openHour").toString();
+                    String closeHour = value.get("closeHour").toString();
+                     String id = value.get("id").toString();
+                     WorkDay workDay = new WorkDay(id,date,openHour,closeHour );
                     workDayList.add(workDay);
                     }
                 listener.onComplete(workDayList);
@@ -97,18 +104,20 @@ public class WorkDayAdapterFirebase {
     public interface GetWorkDayByDateListener {
         void onComplete(WorkDay workDay);
     }
-    public void getWorkDayByDate(final Date date, final GetWorkDayByDateListener listener) {
+    public void getWorkDayByDate(final String date, final GetWorkDayByDateListener listener) {
         getWorkDayList(new GetWorkDayListListener() {
             @Override
             public void onComplete(List<WorkDay> workDayList) {
                 for(int i=0;i<workDayList.size();i++)
                 {
-                    if(date.compareTo(workDayList.get(i).getDate()) == 0)
+                    if(date == workDayList.get(i).getDate())
                     {
                         listener.onComplete(workDayList.get(i));
                     }
                 }
+                listener.onComplete(new WorkDay());
             }
         });
     }
+
 }

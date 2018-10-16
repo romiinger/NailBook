@@ -3,12 +3,15 @@ package romiinger.nailbook.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EventObject;
@@ -52,7 +55,7 @@ public class GridAdapter extends ArrayAdapter {
         }
         if(displayMonth == currentMonth && displayYear == currentYear)
         {
-            view.setBackgroundColor(Color.parseColor( "#FF5733"));
+            view.setBackgroundColor(Color.parseColor( "#CE93D8"));
         }
         else {
             view.setBackgroundColor(Color.parseColor( "#cccccc"));
@@ -65,7 +68,15 @@ public class GridAdapter extends ArrayAdapter {
         Calendar eventCalendar = Calendar.getInstance();
         for (int i=0; i<allEvents.size();i++){
             WorkDay event = allEvents.get(i);
-            eventCalendar.setTime(event.getDate());
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            Date startDate;
+            try {
+                startDate = df.parse(event.getDate().toString());
+                eventCalendar.setTime(startDate);
+            } catch (Exception e) {
+               Log.e(TAG,"exeption "+e);
+            }
+
             if(dayValue == eventCalendar.get(Calendar.DAY_OF_MONTH) &&
                     displayMonth == eventCalendar.get(Calendar.MONTH)+1 &&
                     displayYear == eventCalendar.get(Calendar.YEAR))

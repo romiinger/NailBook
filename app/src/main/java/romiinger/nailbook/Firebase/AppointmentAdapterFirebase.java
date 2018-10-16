@@ -12,10 +12,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import romiinger.nailbook.Class.Appointment;
@@ -24,6 +28,7 @@ public class AppointmentAdapterFirebase {
     private static final String TAG = "AppointmentAdapterF";
     private FirebaseDatabase mdatabase;
     private final String TABLE_DATABASE = "appointment";
+    private DateFormat format = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
 
     public AppointmentAdapterFirebase()
     {
@@ -36,25 +41,45 @@ public class AppointmentAdapterFirebase {
         return appointmentId;
     }
 
-    public void getAppointmentsToApprove(final GetAppointmentsListListener listener)
-    {
-        getAppointmentsList(new GetAppointmentsListListener() {
-            @Override
-        public void onComplete(List<Appointment> appointmentList) {
-        List<Appointment> newList = new ArrayList<>();
-        for(int i=0;i< appointmentList.size();i++)
-        {
-            Appointment appointment = appointmentList.get(i);
-            if(!appointment.isApproved())
-            {
-                newList.add(appointment);
-            }
-        }
-        listener.onComplete(appointmentList);
-    }
-    });
-    }
 
+
+    public void getEmptyAppointmentsByDate(final String date,final GetAppointmentsListListener listener ){
+        getAppointmentsByDate(date, new GetAppointmentsListListener() {
+            @Override
+            public void onComplete(List<Appointment> appointmentList) {
+                List<Appointment> newList = new ArrayList<>();
+                for(int i=0;i< appointmentList.size();i++)
+                {
+                    Appointment appointment = appointmentList.get(i);
+                    if(appointment.getClientId().isEmpty()|| appointment.getClientId() == null)
+                    {
+                        newList.add(appointment);
+                    }
+                }
+                Collections.sort(appointmentList);
+                listener.onComplete(appointmentList);
+            }
+        });
+    }
+    public void getClientAppointmnetByDate(final String date,final GetAppointmentsListListener listener)
+    {
+        getAppointmentsByDate(date, new GetAppointmentsListListener() {
+            @Override
+            public void onComplete(List<Appointment> appointmentList) {
+                List<Appointment> newList = new ArrayList<>();
+                for(int i=0;i< appointmentList.size();i++)
+                {
+                    Appointment appointment = appointmentList.get(i);
+                    if(!appointment.getClientId().isEmpty()&& appointment.getClientId() != null)
+                    {
+                        newList.add(appointment);
+                    }
+                }
+                Collections.sort(appointmentList);
+                listener.onComplete(appointmentList);
+            }
+        });
+    }
     public void getAppointmentsByTreatments(final String treatmentId, final GetAppointmentsListListener listener)
     {
         getAppointmentsList(new GetAppointmentsListListener() {
@@ -69,6 +94,7 @@ public class AppointmentAdapterFirebase {
                         newList.add(appointment);
                     }
                 }
+                Collections.sort(appointmentList);
                 listener.onComplete(appointmentList);
             }
         });
@@ -88,11 +114,12 @@ public class AppointmentAdapterFirebase {
                         newList.add(appointment);
                     }
                 }
+                Collections.sort(appointmentList);
                 listener.onComplete(appointmentList);
             }
         });
     }
-    public void addTreatment(Appointment appointment, final GetAddAppointmentListener listener) {
+    public void addAppointment(Appointment appointment, final GetAddAppointmentListener listener) {
         DatabaseReference myRef = mdatabase.getReference(TABLE_DATABASE).child(appointment.getId());
         Map<String, Object> value = toMap(appointment);
         myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -112,11 +139,17 @@ public class AppointmentAdapterFirebase {
     }
 
 
-    public void getAppointmentsByDate(final Date date, final GetAppointmentsListListener listener) {
+    public void removeApoointmentById(Appointment appointment)
+    {
+        DatabaseReference myRef = mdatabase.getReference(TABLE_DATABASE).child(appointment.getId());
+        myRef.removeValue();
+
+    }
+    public void getAppointmentsByDate(final String date, final GetAppointmentsListListener listener) {
         getAppointmentsByWeeks(date,date, listener );
     }
 
-    public void getAppointmentsByWeeks(final Date startDate, final Date endDate, final GetAppointmentsListListener listener) {
+    public void getAppointmentsByWeeks(final String startDate, final String endDate, final GetAppointmentsListListener listener) {
         getAppointmentsList(new GetAppointmentsListListener() {
             @Override
             public void onComplete(List<Appointment> appointmentList) {
@@ -124,11 +157,26 @@ public class AppointmentAdapterFirebase {
                 for(int i=0;i< appointmentList.size();i++)
                 {
                     Appointment appointment = appointmentList.get(i);
-                    if(!startDate.after(appointment.getDate()) && !endDate.before(appointment.getDate()))  /* startDate <= dateFromDatabase <= endDate */
+                    Date dStartdate = new Date();
+                    Date dAppointment = new Date();
+                    Date dEndDate = new Date();
+                    try{
+                        dStartdate = format.parse(startDate);
+                        dAppointment =format.parse(appointment.getDate());
+                        dEndDate = format.parse(endDate);
+                    }
+                    catch(Exception e)
+                    {
+                        Log.e(TAG,"Exeption "+ e);
+                    }
+
+
+                    if(!dStartdate.after(dAppointment) && !dEndDate.before(dAppointment))  /* startDate <= dateFromDatabase <= endDate */
                     {
                         newList.add(appointment);
                     }
                 }
+                Collections.sort(appointmentList);
                 listener.onComplete(appointmentList);
             }
         });
@@ -165,6 +213,7 @@ public class AppointmentAdapterFirebase {
                     Appointment appointment = toAppointment(value);
                         appointmentList.add(appointment);
                 }
+                Collections.sort(appointmentList);
                 listener.onComplete(appointmentList);
             }
             @Override
@@ -176,13 +225,14 @@ public class AppointmentAdapterFirebase {
 
     private Appointment toAppointment(Map<String, Object> value)
     {
-        Date dateFromDatabase= (Date) value.get("date");
-        Time startHour = (Time) value.get("startHour");
+        String dateFromDatabase= (String) value.get("date");
+        String startHour = (String) value.get("startHour");
+        String endHour = (String) value.get("endHour");
         String treatmentId =(String) value.get("treatmentId");
         String clientId =(String) value.get("clientId");
         boolean approved =(boolean) value.get("approved");
         String id =(String) value.get("id");
-        Appointment appointment = new Appointment(id,dateFromDatabase,startHour,treatmentId,clientId,approved);
+        Appointment appointment = new Appointment(id,dateFromDatabase,startHour,endHour,treatmentId,clientId);
         return appointment;
     }
     private Map<String, Object> toMap(Appointment appointment)
@@ -191,11 +241,12 @@ public class AppointmentAdapterFirebase {
         value.put("id", appointment.getId());
         value.put("date", appointment.getDate());
         value.put("startHour" , appointment.getStartHour());
+        value.put("endHour" , appointment.getEndHour());
         value.put("treatmentId", appointment.getTreatmentId());
         value.put("clientId", appointment.getClientId());
-        value.put("approved", appointment.isApproved());
         return value;
     }
+
 
     public interface GetAppointmentsListListener {
         void onComplete(List<Appointment> appointmentList);

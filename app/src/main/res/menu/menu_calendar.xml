@@ -1,0 +1,22 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <item
+            android:id="@+id/appointmensts_menu"
+            android:title="@string/NewAppointmnet"
+            android:icon="@drawable/agend_icon"
+            android:checkable="false"
+            app:showAsAction="collapseActionView">
+        </item>
+
+        <item
+            android:id="@+id/limitationMenu"
+            android:title="Limitation"
+            android:checkable="false"
+            app:showAsAction="collapseActionView"  >
+
+
+        </item>
+
+</menu>

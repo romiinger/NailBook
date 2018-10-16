@@ -6,14 +6,14 @@ import java.sql.Time;
 import java.util.List;
 
 public class WorkDay {
-    private Date date;
-    private Time openHour;
-    private Time closeHour;
+    private String date;
+    private String openHour;
+    private String closeHour;
     private List<LimitationEvent> limitationEventList;
     private String id;
 
 
-    public WorkDay(String id, Date date, Time openHour , Time closeHour)
+    public WorkDay(String id, String date, String openHour , String closeHour)
     {
         this.id = id;
         this.date = date;
@@ -21,28 +21,9 @@ public class WorkDay {
         this.closeHour = closeHour;
         limitationEventList=new ArrayList<>();
     }
-    public Date getDate() {
-        return date;
-    }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public WorkDay() {
 
-    public Time getOpenHour() {
-        return openHour;
-    }
-
-    public void setOpenHour(Time openHour) {
-        this.openHour = openHour;
-    }
-
-    public Time getCloseHour() {
-        return closeHour;
-    }
-
-    public void setCloseHour(Time closeHour) {
-        this.closeHour = closeHour;
     }
 
     public List<LimitationEvent> getLimitationEventList() {
@@ -59,5 +40,29 @@ public class WorkDay {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getOpenHour() {
+        return openHour;
+    }
+
+    public void setOpenHour(String openHour) {
+        this.openHour = openHour;
+    }
+
+    public String getCloseHour() {
+        return closeHour;
+    }
+
+    public void setCloseHour(String closeHour) {
+        this.closeHour = closeHour;
     }
 }

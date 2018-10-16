@@ -22,4 +22,9 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
 
     </style>
+    <style name="MyDatePickerSpinnerStyle" parent="@android:style/Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
 </resources>

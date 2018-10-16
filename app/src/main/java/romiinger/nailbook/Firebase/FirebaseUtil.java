@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
 
+import romiinger.nailbook.Class.Appointment;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.activitys.MainActivity;
 import romiinger.nailbook.activitys.User.activity_user;
@@ -44,10 +45,12 @@ public class FirebaseUtil {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFiebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFiebaseAuth.getCurrentUser();
+
     }
 
 
     public static void openFbReference(String ref, final MainActivity callerActivity, final FirebaseListener listener) {
+
         Log.d(TAG, "in openFbReference()");
         if (firebaseUtil == null) {
             Log.d(TAG, "new instance from firebase");

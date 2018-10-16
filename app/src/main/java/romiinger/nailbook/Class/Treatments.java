@@ -1,7 +1,12 @@
 package romiinger.nailbook.Class;
 
 
-public class Treatments {
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.Date;
+
+public class Treatments implements Comparable<Treatments>{
 
     private String name;
     private String id;
@@ -55,5 +60,13 @@ public class Treatments {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    @Override
+    public int compareTo( @NonNull Treatments treatments) {
+        if (treatments.getDuration() == null || this.getDuration()==null){
+            return 0;
+        }
+        return this.getDuration().compareTo(treatments.getDuration());
+
     }
 }

@@ -14,9 +14,15 @@ import android.widget.Button;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 import android.util.Log;
-import android.widget.Toast;
 
-import romiinger.nailbook.CustomCalendarActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
+
+import romiinger.nailbook.Class.Appointment;
+import romiinger.nailbook.Firebase.AppointmentAdapterFirebase;
+import romiinger.nailbook.activitys.Calendar.CustomCalendarActivity;
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;
@@ -40,8 +46,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(romiinger.nailbook.R.layout.activity_main);
+
         myFirebase = new FirebaseUtil();
 
+        //DatabaseReference dbNode = FirebaseDatabase.getInstance().getReference("appointment");
+        //dbNode.removeValue();
         createToolBar();
         //createNavigationView();
 

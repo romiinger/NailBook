@@ -1,7 +1,10 @@
-package romiinger.nailbook.activitys;
+package romiinger.nailbook.activitys.Calendar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +41,12 @@ public class CalendarCustomView extends LinearLayout{
     private Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     private Context context;
     private GridAdapter mAdapter;
+    private Context mContext;
 
     public CalendarCustomView(Context context)
     {
         super(context);
+        this.context = context;
     }
     public CalendarCustomView(Context context,AttributeSet attrs)
     {
@@ -93,9 +98,20 @@ public class CalendarCustomView extends LinearLayout{
         calendarGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //toDo
+
+                String day =  Integer.toString(i);
+                newWorkDayActivity(day);
+               Log.d("TAG","cliked in" + i);
             }
         });
+    }
+
+    private void newWorkDayActivity(String day)
+    {
+        Intent intent = new Intent(getContext(), NewWorkDayActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+        //context.finish();
     }
     private void setUpCalendarAtapter()
     {

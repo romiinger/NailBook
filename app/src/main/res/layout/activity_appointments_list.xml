@@ -16,8 +16,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="false"
-        tools:context=".activitys.Treatments.TreatmentsActivity">
+        android:fitsSystemWindows="false">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -55,12 +54,12 @@
                 android:textColor="@color/colorPrimaryVariant"
                 android:textSize="36sp" />
 
-            <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <android.support.constraint.ConstraintLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:context=".activitys.Treatments.TreatmentsActivity">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvTreatments"
@@ -71,12 +70,12 @@
                     android:scrollbars="vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/treatment_row" />
+                    tools:listitem="@layout/appointment_row" />
             </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/newTreatmentIcon"
+            android:id="@+id/newAppointment"
             android:layout_width="wrap_content"
             android:background="@color/colorPrimary"
             android:layout_height="wrap_content"

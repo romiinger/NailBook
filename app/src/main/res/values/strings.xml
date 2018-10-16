@@ -90,7 +90,7 @@
     <string name="History">History</string>
 
     <!-- Strings related to calendar  -->
-    <string name="CalendarName">NailBook Calendar</string>
+    <string name="CalendarName">Calendar</string>
     <string name="current_date">October, 14</string>
     <string name="add_event">Add Appointment</string>
     <string name="sun">SUN</string>
@@ -101,4 +101,18 @@
     <string name="fri">FRI</string>
     <string name="sat">SAT</string>
     <string name="last_date">30</string>
+    <string name="hint_open_hour">open hour</string>
+    <string name="hint_close_hour">close hour</string>
+    <string name="newLimitation">New limitation</string>
+    <string name="startHour">Start Hour</string>
+    <string name="endHour">End hour</string>
+    <string name="limitation">Limitations</string>
+    <string name="dateLimitation">Date</string>
+    <string name="name">name</string>
+    <string name="limitationName">Limitation Name</string>
+    <string name="appointments">appointments</string>
+    <string name="clientName">client name</string>
+    <string name="message">message</string>
+    <string name="NewAppointmnet">New Appointment</string>
+    <string name="ChoiceTreatment">Choice Treatment</string>
 </resources>
