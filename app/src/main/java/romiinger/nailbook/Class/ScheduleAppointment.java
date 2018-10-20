@@ -203,14 +203,15 @@ public class ScheduleAppointment {
                                         appointmentList.remove(index);
                                         Log.d(TAG, "empty appointment is removed");
                                     }
+                                    unionLists(appointmentList, limitationEvent.getDate(), new GetUnionListListener() {
+                                        @Override
+                                        public void onComplete(List<MyEventCalendar> list) {
+                                            compactList(list,limitationEvent.getDate());
+                                        }
+                                    });
                                 }
                             });
-                            unionLists(appointmentList, limitationEvent.getDate(), new GetUnionListListener() {
-                                @Override
-                                public void onComplete(List<MyEventCalendar> list) {
-                                    compactList(list,limitationEvent.getDate());
-                                }
-                            });
+
                         }
                     }
                 });
@@ -249,6 +250,7 @@ public class ScheduleAppointment {
                                 if (onSucess) {
                                     Log.d(TAG, "remove clientId to appointment is success");
                                     refoundWallet(clientId,appointment.getTreatmentId(),listener);
+                                    updateAfterAppendAppointment(appointment.getDate());
 
                                 } else {
                                     Log.d(TAG, "remove clientId to appointment is failed ");

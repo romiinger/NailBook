@@ -178,10 +178,13 @@ public class CalendarCustomView extends LinearLayout{
 
     }
 
-    private void newWorkDayActivity(String day)
+    private void newWorkDayActivity(String date)
     {
         Intent intent = new Intent(getContext(), NewWorkDayActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle b = new Bundle();
+        b.putString("date",date);
+        intent.putExtras(b);
         context.startActivity(intent);
         //context.finish();
     }

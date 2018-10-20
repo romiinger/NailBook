@@ -48,6 +48,7 @@ public class NewWorkDayActivity extends AppCompatActivity {
     private EditText inputOpenHour,inputClouseHour, inputDate;
     private FloatingActionButton btSave,btNewLimitation;
     private Date mDate;
+    private String sDate;
     private  DateFormat formatDate = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
     private DateFormat formatHour = new SimpleDateFormat("HH:mm");
     private Calendar myCalendar = Calendar.getInstance();
@@ -56,6 +57,9 @@ public class NewWorkDayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_workday);
+        Bundle bundle =getIntent().getExtras();
+        if(bundle!=null)
+            sDate = bundle.getString("date");
         createToolBar();
     }
     @Override
@@ -77,9 +81,16 @@ public class NewWorkDayActivity extends AppCompatActivity {
 
     private void setViewInput() {
         inputDate= (EditText) findViewById(R.id.inputDateLayout);
+        if (sDate != null) {
+            inputDate.setText(sDate);
+        }
+        else{
+            getDatePicker(inputDate);
+        }
+
         inputOpenHour = (EditText) findViewById(R.id.inputOpenHour);
         inputClouseHour = (EditText) findViewById(R.id.inputClouseHour);
-        getDatePicker(inputDate);
+
         getHourPicker(inputOpenHour);
         getHourPicker(inputClouseHour);
 
