@@ -28,14 +28,18 @@ public class CustomCalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calendar);
         CalendarCustomView customView = (CalendarCustomView)findViewById(R.id.custom_calendar);
         createToolBar();
-        FloatingActionButton newWorkDay = (FloatingActionButton)findViewById(R.id.addLimitation);
-        newWorkDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                newWorkDayActivity();
+        if (FirebaseUtil.isIsAdmin()) {
+            FloatingActionButton newWorkDay = (FloatingActionButton)findViewById(R.id.addNewWorkday);
+            newWorkDay.setVisibility(View.VISIBLE);
+            newWorkDay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    newWorkDayActivity();
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
     private void newWorkDayActivity()
@@ -54,12 +58,22 @@ public class CustomCalendarActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
         menu.add("").setIcon(romiinger.nailbook.R.drawable.ic_launcher_background);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_calendar, menu);
+        if (FirebaseUtil.isIsAdmin()) {
+            MenuItem limitationMenu =menu.findItem(R.id.limitationMenu);
+            limitationMenu.setVisible(true);
+            MenuItem workDayMenu =menu.findItem(R.id.workDayMenu);
+            workDayMenu.setVisible(true);
+        }
+
+
+
         return true;
     }
         @Override
@@ -73,19 +87,29 @@ public class CustomCalendarActivity extends AppCompatActivity {
                     finish();
                     return true;
                 }
+                case romiinger.nailbook.R.id.workDayMenu: {
+                    newWorkDayActivity();
+                    return true;
+                }
                 case romiinger.nailbook.R.id.appointmensts_menu: {
                     //Log.d(TAG, "Start profile_activity");
                     Intent intent = new Intent(CustomCalendarActivity.this, NewAppointmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
-                    break;
+                    return true;
+                }
+                case romiinger.nailbook.R.id.myAppointments: {
+                    //Log.d(TAG, "Start profile_activity");
+                    Intent intent = new Intent(CustomCalendarActivity.this, ApointmentListViewActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                    return true;
                 }
                 default:
                     return super.onOptionsItemSelected(item);
             }
-
-        return true;
     }
     private void createToolBar() {
         toolbar = (Toolbar) findViewById(romiinger.nailbook.R.id.toolbar);

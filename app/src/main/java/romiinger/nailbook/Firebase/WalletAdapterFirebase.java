@@ -1,7 +1,10 @@
 package romiinger.nailbook.Firebase;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,16 +34,29 @@ public class WalletAdapterFirebase {
         Log.d(TAG, "walletId= " + walletId);
         return walletId;
     }
-
-    public void addWallet(Wallet wallet) {
+    public void addWallet(Wallet wallet, final GetAddWAlletListener listener) {
         DatabaseReference myRef = mdatabase.getReference("wallet").child(wallet.getWalletId());
         Map<String, Object> value = new HashMap<>();
         value.put("ammount", wallet.getAmmount());
         value.put("walletId", wallet.getWalletId());
         value.put("userId", wallet.getUserId());
-        myRef.setValue(value);
+        myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onComplete(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "Exception to push data " + e);
+                listener.onComplete(false);
+            }
+        });
     }
 
+    public interface GetAddWAlletListener{
+        void onComplete(boolean onSucess);
+    }
     public interface GetWalletByClientIdListener {
         void onComplete(Wallet wallet);
     }

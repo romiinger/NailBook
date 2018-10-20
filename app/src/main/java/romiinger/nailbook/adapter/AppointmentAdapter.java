@@ -14,22 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import romiinger.nailbook.Class.Appointment;
+import romiinger.nailbook.Class.MyUser;
+import romiinger.nailbook.Class.Treatments;
 import romiinger.nailbook.Firebase.AppointmentAdapterFirebase;
+import romiinger.nailbook.Firebase.FirebaseUtil;
+import romiinger.nailbook.Firebase.TreatmentsAdapterFirebase;
+import romiinger.nailbook.Firebase.UserAdapterFirebase;
 import romiinger.nailbook.R;
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.MyViewHolderAppointment>
-      implements Filterable {
+{
     private static final String TAG = "LimitationAdapter";
     private Context context;
     private List<Appointment> appointmentList;
-    private List<Appointment> appointmentListFiltered;
     private AppointmentAdapterListener listener;
 
     public AppointmentAdapter(Context context, List<Appointment> appointmentList, AppointmentAdapterListener listener) {
         this.appointmentList = appointmentList;
         this.context = context;
         this.listener = listener;
-        this.appointmentListFiltered = appointmentList;
     }
 
     @Override
@@ -41,53 +44,35 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolderAppointment holder, int position) {
-        final Appointment appointment = appointmentListFiltered.get(position);
+    public void onBindViewHolder(final MyViewHolderAppointment holder, int position) {
+        final Appointment appointment = appointmentList.get(position);
         Log.d("onBindViewHolder:", "treatment.getName()" + appointment.getDate());
-        holder.date.setText(appointment.getDate());
-        holder.startHour.setText(appointment.getStartHour());
-        holder.treatmentId.setText(appointment.getTreatmentId());
-        holder.clientId.setText(appointment.getClientId());
-        //toDo approve appointment
+        holder.date.setText("Date: " + appointment.getDate());
+        holder.startHour.setText("Hour:" +appointment.getStartHour());
+        TreatmentsAdapterFirebase treatmentsAdapterFirebase = new TreatmentsAdapterFirebase();
+        treatmentsAdapterFirebase.getTreatmentById(appointment.getTreatmentId(), new TreatmentsAdapterFirebase.GetTreatmentByIdListener() {
+            @Override
+            public void onComplete(Treatments treatment) {
+                holder.treatmentId.setText("Treatment: " + treatment.getName());
+            }
+        });
+        if(FirebaseUtil.isIsAdmin()){
+            UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+            userAdapterFirebase.getUserById(appointment.getClientId(), new UserAdapterFirebase.GetUserByIdListener() {
+                @Override
+                public void onComplete(MyUser user) {
+                    holder.clientId.setVisibility(View.VISIBLE);
+                    holder.clientId.setText("Client Name: "+ user.getName());
+                }
+            });
+
+        }
     }
     @Override
     public int getItemCount() {
-        return appointmentListFiltered.size();
+        return appointmentList.size();
     }
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    appointmentListFiltered = appointmentList;
-                } else {
-                    List<Appointment> filteredList = new ArrayList<>();
-                    for (Appointment row : appointmentList) {
 
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.getClientId().toLowerCase().contains(charString.toLowerCase())) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    appointmentListFiltered = filteredList;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = appointmentListFiltered;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                appointmentListFiltered = (ArrayList<Appointment>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
     public interface AppointmentAdapterListener {
         void onAppointmetSelected(Appointment appointment);
     }
@@ -105,7 +90,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
                 @Override
                 public void onClick(View view) {
                     // send selected contact in callback
-                    listener.onAppointmetSelected(appointmentListFiltered.get(getAdapterPosition()));
+                    listener.onAppointmetSelected(appointmentList.get(getAdapterPosition()));
                 }
             });
         }

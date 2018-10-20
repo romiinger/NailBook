@@ -155,13 +155,14 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addLimitation"
+        android:id="@+id/addNewWorkday"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="12dp"
+        android:visibility="invisible"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />

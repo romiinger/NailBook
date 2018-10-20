@@ -26,6 +26,7 @@ public class TreatmentViewActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private Bundle bundle;
     private String treatmentIdBundle;
+    private Treatments mTreatemt;
     private FloatingActionButton btEdit, btSave;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class TreatmentViewActivity extends AppCompatActivity {
         adapterFirebase.getTreatmentById(treatmentIdBundle, new TreatmentsAdapterFirebase.GetTreatmentByIdListener() {
             @Override
             public void onComplete(Treatments treatment) {
+                mTreatemt=treatment;
                 TextView nameLT = (TextView) findViewById(R.id.nameTreatment);
                 TextView descriptionLT = (TextView) findViewById(R.id.descriptionTreatment);
                 TextView durationLT = (TextView) findViewById(R.id.duratioTreatment);
@@ -127,8 +129,15 @@ public class TreatmentViewActivity extends AppCompatActivity {
                 String duration = durationTL.getEditText().getText().toString();
                 String price = priceTL.getEditText().getText().toString();
                 Log.d(TAG, "new Treatment id = " + name + " description= " + description + "duration= " + duration + " price=" + price);
-
-                Treatments treatment = new Treatments(treatmentIdBundle, name, description, price, duration);
+                Treatments treatment = mTreatemt;
+                if(name != null)
+                    treatment.setName(name);
+                if(description != null)
+                    treatment.setDescription(description);
+                if(duration != null)
+                    treatment.setDuration(duration);
+                if(price!= null)
+                    treatment.setPrice(price);
                 adapterFirebase.addTreatment(treatment, new TreatmentsAdapterFirebase.GetAddTreatmentListener() {
                     @Override
                     public void onComplete(boolean onSucess) {

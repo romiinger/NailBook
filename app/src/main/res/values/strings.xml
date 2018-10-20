@@ -116,4 +116,5 @@
     <string name="NewAppointmnet">New Appointment</string>
     <string name="ChoiceTreatment">Choice Treatment</string>
     <string name="ChoiceAppointment">Choice Appointmnet</string>
+    <string name="myAppointments">My Appointments</string>
 </resources>

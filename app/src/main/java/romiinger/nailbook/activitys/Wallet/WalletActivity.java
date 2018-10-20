@@ -38,8 +38,8 @@ public class WalletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wallet);
         userIdBundle = null;
         bundle = getIntent().getExtras();
-        if (bundle != null) {
-            userIdBundle = bundle.getString("userId");
+            if (bundle != null) {
+                userIdBundle = bundle.getString("userId");
             createToolBar();
         }
     }

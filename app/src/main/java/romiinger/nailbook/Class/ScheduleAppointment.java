@@ -15,19 +15,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import romiinger.nailbook.Firebase.AppointmentAdapterFirebase;
 import romiinger.nailbook.Firebase.LimitationAdapterFirebase;
 import romiinger.nailbook.Firebase.TreatmentsAdapterFirebase;
 import romiinger.nailbook.Firebase.WalletAdapterFirebase;
 import romiinger.nailbook.Firebase.WorkDayAdapterFirebase;
+import romiinger.nailbook.activitys.Calendar.AppointmentActivity;
 import romiinger.nailbook.activitys.Calendar.NewAppointmentActivity;
 
 
 public class ScheduleAppointment {
     private static final String TAG = "ScheduleAppointment";
-    private Calendar cal = Calendar.getInstance();
+    private Calendar cal ;
     private DateFormat mdf = new SimpleDateFormat("HH:mm");
+    private  DateFormat formatDate = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
     private WorkDayAdapterFirebase workDayAdapterFirebase;
     private AppointmentAdapterFirebase appointmentAdapterFirebase;
     private TreatmentsAdapterFirebase treatmentsAdapterFirebase;
@@ -46,18 +49,8 @@ public class ScheduleAppointment {
         walletAdapterFirebase = new WalletAdapterFirebase();
         limitationAdapterFirebase = new LimitationAdapterFirebase();
     }
-
-
-    public interface GetDatesToAppointmentListener {
-        void onComplete(List<Appointment> emptyAppointments);
-    }
-
-    public interface GetSchechuleListener{
-        void onComplete(boolean isSuccess);
-    }
-
-    public void appendAppointmnetToClient(final Appointment appointment,final Treatments treatment, final GetSchechuleListener listener)
-    {
+    public void appendAppointmnetToClient(final Appointment appointment,final Treatments treatment,
+                                          final GetSchechuleListener listener)    {
         final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         walletAdapterFirebase.getWalletByUserIdNoView(appointment.getClientId(), new WalletAdapterFirebase.GetWalletByClientIdListener() {
@@ -101,7 +94,6 @@ public class ScheduleAppointment {
 
 
     }
-
     public void getEmptyAppointments(final WorkDay workDay, final GetDatesToAppointmentListener listener) {
         Log.d(TAG, "in getEmptyAppointments() ");
         treatmentsAdapterFirebase.getMaxDurationTreatment(
@@ -139,51 +131,6 @@ public class ScheduleAppointment {
 
                 });
     }
-
-    private Date addMinutesToTime(String minutes, Date time) {
-        Date date = new Date();
-        Calendar newCalendar = Calendar.getInstance();
-        newCalendar.setTime(time);
-        long lminutes = Long.parseLong(minutes);
-        long hours = lminutes / 60;
-        long minnutesRemaining = lminutes % 60;
-        newCalendar.add(Calendar.MINUTE, (int) minnutesRemaining);
-        newCalendar.add(Calendar.HOUR, (int) hours);
-        date = newCalendar.getTime();
-        Date test = toTime(mdf.format(date));
-        return test;
-    }
-
-    private void addNewAppointment(String date,
-                                   Date startHourAppointment, Date endAppointment, String treatmentId) {
-        Log.d(TAG, "in addNewAppointment() ");
-        final String appointmentId = appointmentAdapterFirebase.getNewAppointmentId();
-        String sStartAppointemet = mdf.format(startHourAppointment);
-        String sEndAppointment = mdf.format(endAppointment);
-        final Appointment newAppointment = new Appointment(appointmentId, date, sStartAppointemet, sEndAppointment,
-                treatmentId, null);
-        Log.d(TAG, "new Empty appointemet to add: appointmentId= " + appointmentId + "  date= " + date +
-                "  startHourAppointment= " + startHourAppointment + "  endAppointment= " + endAppointment +
-                "  treatmentId= " + treatmentId);
-        appointmentAdapterFirebase.addAppointment(newAppointment,
-                new AppointmentAdapterFirebase.GetAddAppointmentListener() {
-                    @Override
-                    public void onComplete(boolean onSucess) {
-                        if (onSucess) {
-
-                            Log.d(TAG, "empty appointment " + appointmentId + " added");
-                        } else {
-                            Log.d(TAG, "empty appointment " + appointmentId + " failed to added ");
-                        }
-
-                    }
-                });
-    }
-
-    public interface GetVeridicationLimitation {
-        void onComplete(boolean isVerificaded);
-    }
-
     public void veridicationAppointments(final LimitationEvent limitationEvent,
                                          final GetVeridicationLimitation listener) {
 
@@ -219,35 +166,7 @@ public class ScheduleAppointment {
 
 
     }
-
-    private void isOverlap(final LimitationEvent limitationEvent, final Appointment appointment, final GetVeridicationLimitation listener) {
-
-        Log.d(TAG, "in isOverlap() ");
-        final Date startLimtationTime = toTime(limitationEvent.getStartHour());
-        final Date endLimationTime = toTime(limitationEvent.getEndHour());
-        if (startLimtationTime == null || endLimationTime == null) {
-            Log.e(TAG, "Errror to parse string to time date in toTime");
-            listener.onComplete(false);
-        }
-        Date startAppointment = toTime(appointment.getStartHour());
-        Date endAppointment = toTime(appointment.getEndHour());
-
-        if (startLimtationTime.compareTo(startAppointment) == 0 ||
-                (startLimtationTime.compareTo(startAppointment) < 0 &&
-                        !(startAppointment.compareTo(endLimationTime) > 0)) ||
-                (startAppointment.compareTo(startLimtationTime)) < 0 &&
-                        (startLimtationTime.compareTo(endAppointment) < 0)) {
-            Log.d(TAG, "this empty appointment is overlap to limitaion event");
-            listener.onComplete(true);
-        } else {
-            listener.onComplete(false);
-        }
-
-
-    }
-
-    public void updateAfterAppendAppointment(final String date)
-    {
+    public void updateAfterAppendAppointment(final String date)    {
         appointmentAdapterFirebase.getAppointmentsByDateNoView(date, new AppointmentAdapterFirebase.GetAppointmentsListListener() {
             @Override
             public void onComplete(List<Appointment> appointmentList) {
@@ -296,8 +215,99 @@ public class ScheduleAppointment {
                     }
                 });
     }
-    public interface GetUnionListListener{
-        void onComplete(List<MyEventCalendar> list);
+    public Date toTime(String stringTime) {
+        Date date = new Date();
+        try {
+            date = new Time(mdf.parse(stringTime).getTime());
+            return date;
+        } catch (Exception e) {
+            Log.e(TAG, "Exception" + e);
+            return null;
+        }
+    }
+    public void removeClientAppointment(final Appointment appointment, final GetSchechuleListener listener){
+        cal= Calendar.getInstance();
+        Date todayDate = cal.getTime();
+        String sDate = appointment.getDate();
+        Date appointmentDate = null;
+        try{
+             appointmentDate = formatDate.parse(sDate);
+        }
+        catch (Exception e){
+            Log.e(TAG,"Exception " + e);
+        }
+        if(appointmentDate!=null )
+        {
+            if (todayDate.compareTo(appointmentDate)< 0)
+            {
+                final String clientId = appointment.getClientId();
+                appointment.setClientId(null);
+                appointmentAdapterFirebase.addAppointment(appointment,
+                        new AppointmentAdapterFirebase.GetAddAppointmentListener() {
+                            @Override
+                            public void onComplete(boolean onSucess) {
+                                if (onSucess) {
+                                    Log.d(TAG, "remove clientId to appointment is success");
+                                    refoundWallet(clientId,appointment.getTreatmentId(),listener);
+
+                                } else {
+                                    Log.d(TAG, "remove clientId to appointment is failed ");
+                                    listener.onComplete(false);
+                                }
+                            }
+                        });
+            }
+            else
+            {
+                Toast.makeText(AppointmentActivity.getAppContext(),"remove appointment no allowed in the same day",Toast.LENGTH_SHORT).show();
+                listener.onComplete(false);
+            }
+
+        }
+
+    }
+
+
+    private void refoundWallet(final String clientId, String treatmentId, final GetSchechuleListener listener){
+        treatmentsAdapterFirebase.getTreatmentById(treatmentId, new TreatmentsAdapterFirebase.GetTreatmentByIdListener() {
+            @Override
+            public void onComplete(Treatments treatment) {
+                final String price =treatment.getPrice();
+                walletAdapterFirebase.getWalletByUserIdNoView(clientId, new WalletAdapterFirebase.GetWalletByClientIdListener() {
+                    @Override
+                    public void onComplete(Wallet wallet) {
+                        wallet.setAmmount(price);
+                        listener.onComplete(true);
+                    }
+                });
+            }
+        });
+
+    }
+    private void isOverlap(final LimitationEvent limitationEvent, final Appointment appointment, final GetVeridicationLimitation listener) {
+
+        Log.d(TAG, "in isOverlap() ");
+        final Date startLimtationTime = toTime(limitationEvent.getStartHour());
+        final Date endLimationTime = toTime(limitationEvent.getEndHour());
+        if (startLimtationTime == null || endLimationTime == null) {
+            Log.e(TAG, "Errror to parse string to time date in toTime");
+            listener.onComplete(false);
+        }
+        Date startAppointment = toTime(appointment.getStartHour());
+        Date endAppointment = toTime(appointment.getEndHour());
+
+        if (startLimtationTime.compareTo(startAppointment) == 0 ||
+                (startLimtationTime.compareTo(startAppointment) < 0 &&
+                        !(startAppointment.compareTo(endLimationTime) > 0)) ||
+                (startAppointment.compareTo(startLimtationTime)) < 0 &&
+                        (startLimtationTime.compareTo(endAppointment) < 0)) {
+            Log.d(TAG, "this empty appointment is overlap to limitaion event");
+            listener.onComplete(true);
+        } else {
+            listener.onComplete(false);
+        }
+
+
     }
     private void unionLists(final List<Appointment> appointmentList,String date,final GetUnionListListener listener ) {
         final List<MyEventCalendar> unionList = new ArrayList<>();
@@ -329,7 +339,6 @@ public class ScheduleAppointment {
             }
         });
     }
-
     private void compactList(List<MyEventCalendar> unionList,final  String date) {
         int index = 0;
         int nextIndex = 0;
@@ -386,7 +395,6 @@ public class ScheduleAppointment {
             }
         });
     }
-
     private void addEmptyAppointmenttoWindows(final String date, final Date startWindow, final Date endWindow) {
         Log.d(TAG, "in addEmptyAppointmenttoWindows() ");
         treatmentsAdapterFirebase.getMaxDurationTreatment(new TreatmentsAdapterFirebase.GetMaxDurationTreatmentListener() {
@@ -423,18 +431,55 @@ public class ScheduleAppointment {
             }
         });
     }
-
-    public Date toTime(String stringTime) {
+    private Date addMinutesToTime(String minutes, Date time) {
         Date date = new Date();
-        try {
-            date = new Time(mdf.parse(stringTime).getTime());
-            return date;
-        } catch (Exception e) {
-            Log.e(TAG, "Exception" + e);
-            return null;
-        }
+        Calendar newCalendar = Calendar.getInstance();
+        newCalendar.setTime(time);
+        long lminutes = Long.parseLong(minutes);
+        long hours = lminutes / 60;
+        long minnutesRemaining = lminutes % 60;
+        newCalendar.add(Calendar.MINUTE, (int) minnutesRemaining);
+        newCalendar.add(Calendar.HOUR, (int) hours);
+        date = newCalendar.getTime();
+        Date test = toTime(mdf.format(date));
+        return test;
+    }
+    private void addNewAppointment(String date,
+                                   Date startHourAppointment, Date endAppointment, String treatmentId) {
+        Log.d(TAG, "in addNewAppointment() ");
+        final String appointmentId = appointmentAdapterFirebase.getNewAppointmentId();
+        String sStartAppointemet = mdf.format(startHourAppointment);
+        String sEndAppointment = mdf.format(endAppointment);
+        final Appointment newAppointment = new Appointment(appointmentId, date, sStartAppointemet, sEndAppointment,
+                treatmentId, null);
+        Log.d(TAG, "new Empty appointemet to add: appointmentId= " + appointmentId + "  date= " + date +
+                "  startHourAppointment= " + startHourAppointment + "  endAppointment= " + endAppointment +
+                "  treatmentId= " + treatmentId);
+        appointmentAdapterFirebase.addAppointment(newAppointment,
+                new AppointmentAdapterFirebase.GetAddAppointmentListener() {
+                    @Override
+                    public void onComplete(boolean onSucess) {
+                        if (onSucess) {
+
+                            Log.d(TAG, "empty appointment " + appointmentId + " added");
+                        } else {
+                            Log.d(TAG, "empty appointment " + appointmentId + " failed to added ");
+                        }
+
+                    }
+                });
     }
 
-
-
+    public interface GetDatesToAppointmentListener {
+        void onComplete(List<Appointment> emptyAppointments);
+    }
+    public interface GetSchechuleListener{
+        void onComplete(boolean isSuccess);
+    }
+    public interface GetVeridicationLimitation {
+        void onComplete(boolean isVerificaded);
+    }
+    public interface GetUnionListListener{
+        void onComplete(List<MyEventCalendar> list);
+    }
 }

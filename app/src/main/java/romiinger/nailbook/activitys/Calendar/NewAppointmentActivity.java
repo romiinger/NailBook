@@ -23,6 +23,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +47,7 @@ public class NewAppointmentActivity extends AppCompatActivity {
 
     private static final String TAG = "NewAppointment";
     private static Context context;
+    private Toolbar toolbar;
     private FloatingActionButton btsave, btSearch;
     private RecyclerView recyclerView;
     private ListView mListView;
@@ -58,19 +60,30 @@ public class NewAppointmentActivity extends AppCompatActivity {
     private Treatments mTreatment;
     private CheckBox mcheckBoxT;
     private TextView mTreatmentView, mAppointmentView;
+    private String mDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_appointment);
+        createToolBar();
         NewAppointmentActivity.context=getApplicationContext();
+        Bundle bundle =getIntent().getExtras();
         inputDate= (EditText) findViewById(R.id.inputDateLayout);
+        if(bundle!=null){
+            mDate = bundle.getString("date");
+            inputDate.setText(mDate);
+        }
+        else{
+            getDatePicker(inputDate);
+        }
+
         mListView = (ListView) findViewById(R.id.lvTreatments);
         btsave = (FloatingActionButton) findViewById(R.id.saveAppointment);
         btSearch =(FloatingActionButton)findViewById(R.id.search_appointments);
         mcheckBoxT = (CheckBox)findViewById(R.id.record_checkbox_treatmet);
         mTreatmentView = (TextView) findViewById(R.id.tile_treatments);
         mAppointmentView = (TextView) findViewById(R.id.textChoiceAppointment);
-        getDatePicker(inputDate);
+
         getTreatmentsView();
         btSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +106,15 @@ public class NewAppointmentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        // setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(NewAppointmentActivity.this, CustomCalendarActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void saveNewAppointment()
     {
@@ -101,15 +123,33 @@ public class NewAppointmentActivity extends AppCompatActivity {
         scheduleAppointment.appendAppointmnetToClient(mAppointment, mTreatment, new ScheduleAppointment.GetSchechuleListener() {
             @Override
             public void onComplete(boolean isSuccess) {
-                if (isSuccess)
-                Toast.makeText(NewAppointmentActivity.this,"save appointmnets sucess",Toast.LENGTH_SHORT).show();
+                if (isSuccess) {
+                    Toast.makeText(NewAppointmentActivity.this, "save appointmnets sucess", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(NewAppointmentActivity.this, AppointmentActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Bundle b = new Bundle();
+                    b.putString("id",mAppointment.getId());
+                    intent.putExtras(b);
+                    startActivity(intent);
+                    finish();
+                }
 
-                else
-                    Toast.makeText(NewAppointmentActivity.this,"save appointmnets failed",Toast.LENGTH_SHORT).show();
-
+                else {
+                    Toast.makeText(NewAppointmentActivity.this, "save appointmnets failed", Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
             }
         });
 
+
+    }
+    private void createToolBar() {
+        //Log.d(TAG," In Create toolbar");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        toolbar.setSubtitle("Calendar - New Appointment ");
+        setSupportActionBar(toolbar);
+        toolbar.setContentInsetStartWithNavigation(0);
 
     }
     private void getAppointmentView()

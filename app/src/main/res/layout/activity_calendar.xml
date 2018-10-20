@@ -55,18 +55,7 @@
             </romiinger.nailbook.activitys.Calendar.CalendarCustomView>
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/newWorkDay"
-            android:layout_width="wrap_content"
-            android:background="@color/colorPrimary"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/baseline_add_black_18dp"
-            android:visibility="invisible"/>
+
     </android.support.design.widget.CoordinatorLayout>
 
 

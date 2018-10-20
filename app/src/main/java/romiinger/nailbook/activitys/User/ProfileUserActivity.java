@@ -9,12 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
 
+import java.util.List;
+
+import romiinger.nailbook.Class.Appointment;
 import romiinger.nailbook.Class.Wallet;
+import romiinger.nailbook.Firebase.AppointmentAdapterFirebase;
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.Firebase.WalletAdapterFirebase;
 import romiinger.nailbook.R;
 import romiinger.nailbook.Firebase.UserAdapterFirebase;
+import romiinger.nailbook.activitys.Calendar.ApointmentListViewActivity;
 import romiinger.nailbook.activitys.MainActivity;
 import romiinger.nailbook.activitys.Wallet.WalletActivity;
 
@@ -24,7 +29,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
     private static final String TAG = "ProfileUserActivity";
     private DrawerLayout mdrawerLayout;
     private Button btResetPassword ,btEditProfile;
-    private LinearLayout walletLayout;
+    private LinearLayout walletLayout,treatmentLayout;
     private Bundle bundle;
     private String userIdBundle;
 
@@ -57,14 +62,23 @@ public class ProfileUserActivity extends  AppCompatActivity {
                 TextView phoneLayout = (TextView) findViewById(R.id.phoneLayout);
                 String phone = user.getPhone();
                 phoneLayout.setText(phone);
-                final TextView walletLayout = (TextView)findViewById(R.id.walletLayout);
+                final TextView walletLayoutT = (TextView)findViewById(R.id.walletLayout);
+                final TextView treatmentLayoutT = (TextView)findViewById(R.id.treatmentLayout);
                 //String wallet = user.getWallet();
                 //walletLayout.setText(wallet);
                 WalletAdapterFirebase walletAdapterFirebase = new WalletAdapterFirebase();
                 walletAdapterFirebase.getWalletByUserId(user.getStId(), new WalletAdapterFirebase.GetWalletByClientIdListener() {
                     @Override
                     public void onComplete(Wallet wallet) {
-                        walletLayout.setText(wallet.getAmmount());
+                        walletLayoutT.setText(wallet.getAmmount());
+                    }
+                });
+                AppointmentAdapterFirebase appointmentAdapterFirebase = new AppointmentAdapterFirebase();
+                appointmentAdapterFirebase.getAppointmentsByUser(user.getStId(), new AppointmentAdapterFirebase.GetAppointmentsListListener() {
+                    @Override
+                    public void onComplete(List<Appointment> appointmentList) {
+                        String size = Integer.toString(appointmentList.size());
+                        treatmentLayoutT.setText(size);
                     }
                 });
             }
@@ -72,6 +86,8 @@ public class ProfileUserActivity extends  AppCompatActivity {
         });
         walletLayout = (LinearLayout)findViewById(R.id.wallet_Layout);
         walletLayout.setOnClickListener(new OnWalletClick());
+        treatmentLayout =(LinearLayout)findViewById(R.id.treatment_layout);
+        treatmentLayout.setOnClickListener(new OnTreatmentClick());
         btResetPassword = (Button) findViewById(R.id.btnResetPassword);
         btEditProfile = (Button) findViewById(R.id.update_profil);
         if(FirebaseUtil.isIsAdmin())
@@ -111,7 +127,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
     private void onWalletClicked()
     {
         Log.d(TAG,"onWalletClicked");
-        Intent  intent=new Intent(ProfileUserActivity.this,WalletActivity.class);
+        Intent  intent = new Intent(ProfileUserActivity.this,WalletActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         if(userIdBundle!=null)
         {
@@ -123,10 +139,32 @@ public class ProfileUserActivity extends  AppCompatActivity {
         finish();
     }
 
+    private void onTreatmentClicked(){
+        Log.d(TAG,"ontreatmentCliked");
+        Intent  intent = new Intent(ProfileUserActivity.this,ApointmentListViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if(userIdBundle!=null)
+        {
+            Bundle b = new Bundle();
+            b.putString("userId",userIdBundle);
+            intent.putExtras(b);
+        }
+        startActivity(intent);
+        finish();
+
+    }
     class OnWalletClick implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             onWalletClicked();
+        }
+    }
+
+    class OnTreatmentClick implements  View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            onTreatmentClicked();
         }
     }
 
