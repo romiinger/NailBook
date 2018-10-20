@@ -1,7 +1,10 @@
 package romiinger.nailbook.Class;
 
-import android.app.usage.UsageEvents;
+
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.sql.Time;
 import java.text.DateFormat;
@@ -9,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +21,11 @@ import romiinger.nailbook.Firebase.LimitationAdapterFirebase;
 import romiinger.nailbook.Firebase.TreatmentsAdapterFirebase;
 import romiinger.nailbook.Firebase.WalletAdapterFirebase;
 import romiinger.nailbook.Firebase.WorkDayAdapterFirebase;
+import romiinger.nailbook.activitys.Calendar.NewAppointmentActivity;
+
 
 public class ScheduleAppointment {
-    private static final String TAG = "AppointmentAdapterF";
+    private static final String TAG = "ScheduleAppointment";
     private Calendar cal = Calendar.getInstance();
     private DateFormat mdf = new SimpleDateFormat("HH:mm");
     private WorkDayAdapterFirebase workDayAdapterFirebase;
@@ -30,6 +36,8 @@ public class ScheduleAppointment {
     private WorkDay mWorkday;
     private List<Appointment> mAppointmentList;
     private Treatments mTreatment;
+    private Date mEndAppointmnet;
+    private Wallet mWallet;
 
     public ScheduleAppointment() {
         workDayAdapterFirebase = new WorkDayAdapterFirebase();
@@ -44,56 +52,119 @@ public class ScheduleAppointment {
         void onComplete(List<Appointment> emptyAppointments);
     }
 
-    public void getEmptyAppointments(final String date, final GetDatesToAppointmentListener listener) {
+    public interface GetSchechuleListener{
+        void onComplete(boolean isSuccess);
+    }
+
+    public void appendAppointmnetToClient(final Appointment appointment,final Treatments treatment, final GetSchechuleListener listener)
+    {
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        walletAdapterFirebase.getWalletByUserIdNoView(appointment.getClientId(), new WalletAdapterFirebase.GetWalletByClientIdListener() {
+            @Override
+            public void onComplete(final Wallet wallet) {
+                mWallet =wallet;
+
+                int walletAmmount = Integer.parseInt(mWallet.getAmmount());
+                int treatmentPrice = Integer.parseInt(treatment.getPrice());
+
+                if(!(walletAmmount < treatmentPrice)) {
+                    Log.d(TAG, "wallet have sufficient amoount to sabe this appointmnet");
+                    walletAmmount = walletAmmount - treatmentPrice;
+                    treatmentPrice= treatmentPrice * -1;
+                    String newWalletValue = Integer.toString(walletAmmount);
+                    String streatmentPrice = Integer.toString(treatmentPrice);
+                    Log.d(TAG, "The new ammount value is:  " +newWalletValue);
+                    mWallet.setAmmount(streatmentPrice);
+                    appointment.setClientId(uid);
+                    if (treatment.getId() != appointment.getTreatmentId()) {
+                        appointment.setTreatmentId(treatment.getId());
+                        Date startAppointment = toTime(appointment.getStartHour());
+                        Date endAppintment = addMinutesToTime(treatment.getDuration(), startAppointment);
+                        appointment.setEndHour(mdf.format(endAppintment));
+                    }
+                    appointmentAdapterFirebase.addAppointment(appointment, new AppointmentAdapterFirebase.GetAddAppointmentListener() {
+                        @Override
+                        public void onComplete(final boolean onSucess) {
+                            listener.onComplete(onSucess);
+                            updateAfterAppendAppointment(appointment.getDate());
+                        }
+                    });
+                }
+
+                else
+                {
+                    Toast.makeText(NewAppointmentActivity.getAppContext(),"no fount ammount in her wallet to save appointments,contact your Tecnical Nails",Toast.LENGTH_SHORT).show();
+                    listener.onComplete(false);
+                }
+            }});
+
+
+    }
+
+    public void getEmptyAppointments(final WorkDay workDay, final GetDatesToAppointmentListener listener) {
+        Log.d(TAG, "in getEmptyAppointments() ");
         treatmentsAdapterFirebase.getMaxDurationTreatment(
                 new TreatmentsAdapterFirebase.GetMaxDurationTreatmentListener() {
                     @Override
                     public void onComplete(final Treatments maxDurationTreatment) {
-                        workDayAdapterFirebase.getWorkDayByDate(date,
-                                new WorkDayAdapterFirebase.GetWorkDayByDateListener() {
-                                    @Override
-                                    public void onComplete(WorkDay workDay) {
-                                        if (workDay.getDate().isEmpty() || workDay.getDate() == null) {
-                                            Log.d(TAG, "no workday exist in this date");
-                                            listener.onComplete(null);
-                                        } else {
-                                            mWorkday = workDay;
-                                            Date openHour = toTime(mWorkday.getOpenHour());
-                                            Date clouseHour = toTime(mWorkday.getCloseHour());
-                                            if (openHour == null || clouseHour == null) {
-                                                Log.d(TAG, "failed to cast string date to date");
-                                                listener.onComplete(null);
-                                            }
-                                            final List<Appointment> emptyAppointments = new ArrayList<>();
-                                            Date hourAppointment = openHour;
-                                            cal.setTime(hourAppointment);
-                                            Date endAppointment = null;
-                                            do {
-                                                String sHourAppointment = mdf.format(hourAppointment.getTime());
-                                                addNewAppointment( date, sHourAppointment, maxDurationTreatment);
-                                                cal.add(Calendar.MINUTE, Integer.parseInt(maxDurationTreatment.getDuration()));
-                                                hourAppointment = cal.getTime();
-                                                cal.add(Calendar.MINUTE, Integer.parseInt(maxDurationTreatment.getDuration()));
-                                                endAppointment = cal.getTime();
-                                            }
-                                            while (endAppointment.compareTo(clouseHour) > 0);
-                                            listener.onComplete(emptyAppointments);
-                                        }
-                                    }
-                                });
+
+                        if (workDay.getDate().isEmpty() || workDay.getDate() == null) {
+                            Log.d(TAG, "no workday exist in this date");
+                            listener.onComplete(null);
+                        } else {
+                            mWorkday = workDay;
+                            Date openHour = toTime(mWorkday.getOpenHour());
+                            Log.d(TAG, "open workday = " + openHour);
+                            Date clouseHour = toTime(mWorkday.getCloseHour());
+                            Log.d(TAG, "clouse workday = " + clouseHour);
+                            if (openHour == null || clouseHour == null) {
+                                Log.d(TAG, "failed to cast string date to date");
+                                listener.onComplete(null);
+                            }
+                            final List<Appointment> emptyAppointments = new ArrayList<>();
+                            Date hourAppointment = openHour;
+                            String duration = maxDurationTreatment.getDuration();
+                            Date endAppointment = addMinutesToTime(duration, hourAppointment);
+                            Log.d(TAG, "endAppointment = " + endAppointment);
+                            while (!(endAppointment.compareTo(clouseHour) > 0)) {
+                                addNewAppointment(workDay.getDate(), hourAppointment, endAppointment, maxDurationTreatment.getId());
+                                hourAppointment = endAppointment;
+                                endAppointment = addMinutesToTime(duration, hourAppointment);
+                            }
+                            listener.onComplete(emptyAppointments);
+                        }
                     }
+
+
                 });
     }
 
+    private Date addMinutesToTime(String minutes, Date time) {
+        Date date = new Date();
+        Calendar newCalendar = Calendar.getInstance();
+        newCalendar.setTime(time);
+        long lminutes = Long.parseLong(minutes);
+        long hours = lminutes / 60;
+        long minnutesRemaining = lminutes % 60;
+        newCalendar.add(Calendar.MINUTE, (int) minnutesRemaining);
+        newCalendar.add(Calendar.HOUR, (int) hours);
+        date = newCalendar.getTime();
+        Date test = toTime(mdf.format(date));
+        return test;
+    }
+
     private void addNewAppointment(String date,
-                                   String startHourAppointment, Treatments maxDurationTreatment) {
+                                   Date startHourAppointment, Date endAppointment, String treatmentId) {
+        Log.d(TAG, "in addNewAppointment() ");
         final String appointmentId = appointmentAdapterFirebase.getNewAppointmentId();
-        Date hour = toTime(startHourAppointment);
-        cal.setTime(hour);
-        cal.add(Calendar.MINUTE, Integer.parseInt(maxDurationTreatment.getDuration()));
-        String endAppointment = mdf.format(cal.getTime());
-        final Appointment newAppointment = new Appointment(appointmentId, date, startHourAppointment, endAppointment,
-                maxDurationTreatment.getId(), null);
+        String sStartAppointemet = mdf.format(startHourAppointment);
+        String sEndAppointment = mdf.format(endAppointment);
+        final Appointment newAppointment = new Appointment(appointmentId, date, sStartAppointemet, sEndAppointment,
+                treatmentId, null);
+        Log.d(TAG, "new Empty appointemet to add: appointmentId= " + appointmentId + "  date= " + date +
+                "  startHourAppointment= " + startHourAppointment + "  endAppointment= " + endAppointment +
+                "  treatmentId= " + treatmentId);
         appointmentAdapterFirebase.addAppointment(newAppointment,
                 new AppointmentAdapterFirebase.GetAddAppointmentListener() {
                     @Override
@@ -116,128 +187,227 @@ public class ScheduleAppointment {
     public void veridicationAppointments(final LimitationEvent limitationEvent,
                                          final GetVeridicationLimitation listener) {
 
-        //toDo limitation to add limitation if exist appointment client in the same hours
+        Log.d(TAG, "in veridicationAppointments() ");
+        Log.d(TAG, "before getClientAppointmnetByDate() " + limitationEvent.getDate());
         appointmentAdapterFirebase.getClientAppointmnetByDate(limitationEvent.getDate(),
                 new AppointmentAdapterFirebase.GetAppointmentsListListener() {
                     @Override
                     public void onComplete(List<Appointment> appointmentList) {
                         boolean verificator = false;
                         for (int i = 0; i < appointmentList.size(); i++) {
-                            if (isOverlap(limitationEvent, appointmentList.get(i)))
-                                listener.onComplete(false);
+                            isOverlap(limitationEvent, appointmentList.get(i), new GetVeridicationLimitation() {
+                                @Override
+                                public void onComplete(boolean isVerificaded) {
+                                    if (isVerificaded) {
+                                        Log.d(TAG, "no authorize no add this limitation");
+                                        listener.onComplete(false);
+
+                                    } else {
+                                        Log.d(TAG, " authorize to add this limitation");
+                                        listener.onComplete(true);
+                                    }
+                                }
+                            });
                         }
-                        updateEmptyAppointments(limitationEvent, listener);
+                        if(appointmentList.size()==0)
+                        {
+                            Log.d(TAG, " authorize to add this limitation");
+                            listener.onComplete(true);
+                        }
                     }
                 });
-        //toDo update empty appointments in firebae
+
+
     }
 
-    private boolean isOverlap(final LimitationEvent limitationEvent, final Appointment appointment) {
-        final boolean[] toReturn = new boolean[1];
+    private void isOverlap(final LimitationEvent limitationEvent, final Appointment appointment, final GetVeridicationLimitation listener) {
+
+        Log.d(TAG, "in isOverlap() ");
         final Date startLimtationTime = toTime(limitationEvent.getStartHour());
         final Date endLimationTime = toTime(limitationEvent.getEndHour());
         if (startLimtationTime == null || endLimationTime == null) {
             Log.e(TAG, "Errror to parse string to time date in toTime");
-            return true;
+            listener.onComplete(false);
         }
-        final Date startAppointment = toTime(appointment.getStartHour());
-        treatmentsAdapterFirebase.getTreatmentById(appointment.getTreatmentId(),
-                new TreatmentsAdapterFirebase.GetTreatmentByIdListener() {
-                    @Override
-                    public void onComplete(Treatments treatment) {
-                        cal.setTime(startAppointment);
-                        cal.add(Calendar.MINUTE, Integer.parseInt(treatment.getDuration()));
-                        Date endAppointment = cal.getTime();
-                        if (startLimtationTime.compareTo(startAppointment) == 0 ||
-                                (startLimtationTime.compareTo(startAppointment) < 0 &&
-                                        !(startAppointment.compareTo(endLimationTime) > 0)) ||
-                                (startAppointment.compareTo(startLimtationTime)) < 0 &&
-                                        (startLimtationTime.compareTo(endAppointment) < 0)) {
-                            toReturn[0] = true;
-                        }
-                    }
-                });
-        if (toReturn[0])
-            return true;
-        else return false;
+        Date startAppointment = toTime(appointment.getStartHour());
+        Date endAppointment = toTime(appointment.getEndHour());
+
+        if (startLimtationTime.compareTo(startAppointment) == 0 ||
+                (startLimtationTime.compareTo(startAppointment) < 0 &&
+                        !(startAppointment.compareTo(endLimationTime) > 0)) ||
+                (startAppointment.compareTo(startLimtationTime)) < 0 &&
+                        (startLimtationTime.compareTo(endAppointment) < 0)) {
+            Log.d(TAG, "this empty appointment is overlap to limitaion event");
+            listener.onComplete(true);
+        } else {
+            listener.onComplete(false);
+        }
+
+
     }
 
-    public void updateEmptyAppointments(final LimitationEvent limitationEvent, final GetVeridicationLimitation listener) {
+    public void updateAfterAppendAppointment(final String date)
+    {
+        appointmentAdapterFirebase.getAppointmentsByDateNoView(date, new AppointmentAdapterFirebase.GetAppointmentsListListener() {
+            @Override
+            public void onComplete(List<Appointment> appointmentList) {
+                unionLists(appointmentList, date, new GetUnionListListener() {
+                    @Override
+                    public void onComplete(List<MyEventCalendar> list) {
+                        if(list.size()==0)
+                        {
+                            Log.d(TAG,"error to union lists");
+                            return;
+                        }
+                        compactList(list,date);
+                    }
+                });
+
+            }});
+
+
+    }
+    public void updateEmptyAppointments(final LimitationEvent limitationEvent) {
+        Log.d(TAG, "in updateEmptyAppointments() ");
         //remove emptys appointmenys overlap to limitaion event
-        appointmentAdapterFirebase.getEmptyAppointmentsByDate(limitationEvent.getDate(),
+        appointmentAdapterFirebase.getEmptyAppointmentsByDateNoView(limitationEvent.getDate(),
                 new AppointmentAdapterFirebase.GetAppointmentsListListener() {
                     @Override
                     public void onComplete(final List<Appointment> appointmentList) {
                         for (int i = 0; i < appointmentList.size(); i++) {
-                            if (isOverlap(limitationEvent, appointmentList.get(i))) {
-                                appointmentAdapterFirebase.removeApoointmentById(appointmentList.get(i));
-                                appointmentList.remove(i);
-                            }
-                        }
-                        //update emptys appointment lis
-                        limitationAdapterFirebase.getLimitationByDate(limitationEvent.getDate(), new LimitationAdapterFirebase.GetLimitationByDateListener() {
-                            @Override
-                            public void onComplete(List<LimitationEvent> limitationEventList) {
-                                List<MyEventCalendar> unionList = new ArrayList<>();
-                                unionList.addAll(limitationEventList);
-                                unionList.addAll(appointmentList);
-                                Collections.sort(unionList);
-                                //List<Object> unionList = joinList(limitationEventList,appointmentList);
-                                int index = 0;
-                                while (index < unionList.size()) {
-                                    Date event = toTime(unionList.get(index).getEndHour());
-                                    Date nextEvent = toTime(unionList.get(index++).getStartHour());
-
-                                    if (event.compareTo(nextEvent) != 0) {
-                                        if (unionList.get(index++) instanceof LimitationEvent ||
-                                                (unionList.get(index++) instanceof Appointment &&
-                                                        ((Appointment) unionList.get(index++)).getClientId() != null)) {
-                                            addEmptyAppointmenttoWindows(limitationEvent.getDate(), event, nextEvent);
-                                        } else {
-
-                                            Date endNextEvent = toTime((unionList.get(index++).getEndHour()));
-                                            long duration = endNextEvent.getTime() - nextEvent.getTime();
-                                            Appointment appointment = (Appointment) unionList.get(index++);
-                                            appointment.setStartHour(mdf.format(event));
-                                            cal.setTime(event);
-                                            cal.add(Calendar.MINUTE, (int) duration);
-                                            String newEnd = mdf.format(cal.getTime());
-                                            appointment.setEndHour(newEnd);
-                                            appointmentAdapterFirebase.addAppointment(appointment, new AppointmentAdapterFirebase.GetAddAppointmentListener() {
-                                                @Override
-                                                public void onComplete(boolean onSucess) {
-                                                    Log.d(TAG, "update window list");
-                                                }
-                                            });
-                                        }
+                            final int index = i;
+                            isOverlap(limitationEvent, appointmentList.get(i), new GetVeridicationLimitation() {
+                                @Override
+                                public void onComplete(boolean isVerificaded) {
+                                    if (isVerificaded) {
+                                        appointmentAdapterFirebase.removeApoointmentById(appointmentList.get(index));
+                                        appointmentList.remove(index);
+                                        Log.d(TAG, "empty appointment is removed");
                                     }
-
                                 }
-                                listener.onComplete(true);
-                            }
-                        });
+                            });
+                            unionLists(appointmentList, limitationEvent.getDate(), new GetUnionListListener() {
+                                @Override
+                                public void onComplete(List<MyEventCalendar> list) {
+                                    compactList(list,limitationEvent.getDate());
+                                }
+                            });
+                        }
                     }
                 });
     }
+    public interface GetUnionListListener{
+        void onComplete(List<MyEventCalendar> list);
+    }
+    private void unionLists(final List<Appointment> appointmentList,String date,final GetUnionListListener listener ) {
+        final List<MyEventCalendar> unionList = new ArrayList<>();
+        limitationAdapterFirebase.getLimitationByDateNoView(date, new LimitationAdapterFirebase.GetLimitationByDateListener() {
+            @Override
+            public void onComplete(List<LimitationEvent> limitationEventList) {
+
+                unionList.addAll(limitationEventList);
+                Log.d(TAG,"after add limitationList, size= " +limitationEventList.size()+" unionList size= "+unionList.size());
+                unionList.addAll(appointmentList);
+                Log.d(TAG,"after add appointmentList, size= " +appointmentList.size()+" unionList size= "+unionList.size());
+                Comparator<MyEventCalendar> comparator = new Comparator<MyEventCalendar>() {
+                    @Override
+                    public int compare(MyEventCalendar left, MyEventCalendar right) {
+                        Date leftTime = toTime(left.getEndHour());
+                        Date rigthTime = toTime(right.getStartHour());
+                        if (leftTime.compareTo(rigthTime) == 0)
+                            return 0;
+                        else if (leftTime.compareTo(rigthTime) > 0)
+                            return 1;
+                        else return -1;
+                    }
+                };
+                Collections.sort(unionList, comparator);
+                for (int i = 0; i < unionList.size(); i++) {
+                    Log.d(TAG, "id:" + unionList.get(i).getStartHour() + " " + unionList.get(i).getEndHour());
+                }
+                listener.onComplete(unionList);
+            }
+        });
+    }
+
+    private void compactList(List<MyEventCalendar> unionList,final  String date) {
+        int index = 0;
+        int nextIndex = 0;
+        while (nextIndex +1 < unionList.size()) {
+            nextIndex++;
+            Date eventEndhour = toTime(unionList.get(index).getEndHour());
+            Date nextEvent = toTime(unionList.get(nextIndex).getStartHour());
+
+            if (eventEndhour.compareTo(nextEvent) != 0) {
+                if (unionList.get(nextIndex) instanceof LimitationEvent ||
+                        (unionList.get(nextIndex) instanceof Appointment &&
+                                ((Appointment) unionList.get(nextIndex)).getClientId() != null)) {
+                    addEmptyAppointmenttoWindows(date, eventEndhour, nextEvent);
+                } else {
+
+                    Date endNextEvent = toTime((unionList.get(nextIndex).getEndHour()));
+                    int minutesEnd = endNextEvent.getMinutes() + endNextEvent.getHours() * 60;
+                    int minutesStart = nextEvent.getMinutes() + nextEvent.getHours() * 60;
+                    int duration = minutesEnd - minutesStart;
+
+                    Log.d(TAG,"set nextIndex = "+ unionList.get(nextIndex));
+                    unionList.get(nextIndex).setStartHour(unionList.get(index).getEndHour());
+                    Log.d(TAG,"new StartHour= "+ unionList.get(index).getEndHour());
+                    Date end = addMinutesToTime(Long.toString(duration), eventEndhour);
+                    String newEnd = mdf.format(end);
+                    Log.d(TAG,"set endHour = "+ newEnd);
+
+                    unionList.get(nextIndex).setEndHour(newEnd);
+                    appointmentAdapterFirebase.addAppointment((Appointment)unionList.get(nextIndex), new AppointmentAdapterFirebase.GetAddAppointmentListener() {
+                        @Override
+                        public void onComplete(boolean onSucess) {
+                            Log.d(TAG, "update window list");
+                        }
+                    });
+                }
+            }
+            index++;
+        }
+        String lastHourEndAppointment = unionList.get(unionList.size()-1).getEndHour();
+        Log.d(TAG,"the hour to last appointment is: "+ lastHourEndAppointment);
+        final Date lastHour = toTime(lastHourEndAppointment);
+
+        workDayAdapterFirebase.getWorkDayByDate(date, new WorkDayAdapterFirebase.GetWorkDayByDateListener() {
+            @Override
+            public void onComplete(WorkDay workDay) {
+                String sClusehour=workDay.getCloseHour();
+                Date clouseHour = toTime(sClusehour);
+                Log.d(TAG,"the clouse hour is: " + sClusehour);
+                if (lastHour.compareTo(clouseHour) < 0) {
+                    Log.d(TAG,"the latest end hour from appointment is before clouse hour, check to add new empty appointment");
+
+                    addEmptyAppointmenttoWindows(date, lastHour, clouseHour);
+                }
+            }
+        });
+    }
 
     private void addEmptyAppointmenttoWindows(final String date, final Date startWindow, final Date endWindow) {
+        Log.d(TAG, "in addEmptyAppointmenttoWindows() ");
         treatmentsAdapterFirebase.getMaxDurationTreatment(new TreatmentsAdapterFirebase.GetMaxDurationTreatmentListener() {
             @Override
             public void onComplete(Treatments maxDurationTreatment) {
-                cal.setTime(startWindow);
-                cal.add(Calendar.MINUTE, Integer.parseInt(maxDurationTreatment.getDuration()));
-                if (!(cal.getTime().compareTo(endWindow) > 0))
-                    addNewAppointment(date, mdf.format(startWindow), maxDurationTreatment);
+                mEndAppointmnet = addMinutesToTime(maxDurationTreatment.getDuration(), startWindow);
+                if (!(mEndAppointmnet.compareTo(endWindow) > 0)) {
+                    addNewAppointment(date, startWindow, mEndAppointmnet, maxDurationTreatment.getId());
+                    Log.d(TAG,"the empty windows allowing to add the max duration treatment");
+                }
                 else {
                     treatmentsAdapterFirebase.getTreatmentsList(new TreatmentsAdapterFirebase.GetTreatmentListListener() {
                         @Override
                         public void onComplete(List<Treatments> treatmentsList) {
                             int index = treatmentsList.size() - 1;
-                            while (index > 0) {
-                                cal.setTime(startWindow);
-                                cal.add(Calendar.MINUTE, Integer.parseInt(treatmentsList.get(index).getDuration()));
-                                if (!(cal.getTime().compareTo(endWindow) > 0)) {
-                                    addNewAppointment(date, mdf.format(startWindow), treatmentsList.get(index));
+                            while (index > -1) {
+                                String duration = treatmentsList.get(index).getDuration();
+                                mEndAppointmnet = addMinutesToTime(duration, startWindow);
+                                if (!(mEndAppointmnet.compareTo(endWindow) > 0)) {
+                                    Log.d(TAG,"the empty windows allowing to add new appointment with less duration ");
+                                    addNewAppointment(date, startWindow, mEndAppointmnet, treatmentsList.get(index).getId());
                                     break;
                                 }
                                 index--;
@@ -245,11 +415,16 @@ public class ScheduleAppointment {
                         }
                     });
                 }
+                if(!(mEndAppointmnet.compareTo(endWindow)>0))
+                {
+                    Log.d(TAG,"recursion to check if the empty windows allowing to add treatment");
+                    addEmptyAppointmenttoWindows(date,mEndAppointmnet,endWindow);
+                }
             }
         });
     }
 
-    private Date toTime(String stringTime) {
+    public Date toTime(String stringTime) {
         Date date = new Date();
         try {
             date = new Time(mdf.parse(stringTime).getTime());
@@ -260,33 +435,6 @@ public class ScheduleAppointment {
         }
     }
 
-    private List<Object> joinList(List<LimitationEvent> limitationEventList, List<Appointment> appointmentList) {
-        final List<Object> unionList = new ArrayList<>();
-        int indexEventList = 0;
-        int indexAList = 0;
-        while (indexEventList < limitationEventList.size() && indexAList < appointmentList.size()) {
-            Date eventD = toTime(limitationEventList.get(indexEventList).getDate());
-            Date appointmentD = toTime(appointmentList.get(indexAList).getDate());
-            if (eventD.compareTo(appointmentD) < 0) {
-                unionList.add(limitationEventList.get(indexEventList));
-                indexEventList++;
-            } else {
-                unionList.add(appointmentList.get(indexAList));
-                indexAList++;
-            }
-        }
-        if (indexEventList == limitationEventList.size() && indexAList < appointmentList.size()) {
-            while (indexAList < appointmentList.size()) {
-                unionList.add(appointmentList.get(indexAList));
-                indexAList++;
-            }
-        }
-        if (indexEventList < limitationEventList.size() && indexAList == appointmentList.size()) {
-            while (indexEventList < limitationEventList.size()) {
-                unionList.add(limitationEventList.get(indexEventList));
-                indexEventList++;
-            }
-        }
-        return unionList;
-    }
+
+
 }

@@ -132,7 +132,7 @@ public class NewWorkDayActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
                 myCalendar.set(Calendar.HOUR_OF_DAY,hourOfDay );
                 myCalendar.set(Calendar.MINUTE,minute);
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 sdf.setTimeZone(TimeZone.getTimeZone("Asia/Jerusalem"));
                 editText.setText(sdf.format(myCalendar.getTime()));
                 Log.d(TAG, "hour= " + myCalendar.get(Calendar.HOUR_OF_DAY) +":" + myCalendar.get(Calendar.MINUTE));

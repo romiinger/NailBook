@@ -64,7 +64,7 @@ public class FirebaseUtil {
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     if (mFiebaseAuth.getCurrentUser() == null) {
                         Log.d(TAG, "Before signIn()");
-                        FirebaseUtil.signIn(new FirebaseListener()
+                        signIn(new FirebaseListener()
                         {
                             @Override
                             public void onComplete(String message) {
@@ -158,19 +158,19 @@ public class FirebaseUtil {
             }
         });
         Log.d(TAG, "in checkAdmin");
-        FirebaseUtil.isAdmin = false;
+        isAdmin = false;
         DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
         ChildEventListener listener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
+                isAdmin = true;
                 caller.showMenu();
                 Log.d("Admin:", "you are in administrator");
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
+               isAdmin = true;
                 caller.showMenu();
                 Log.d("Admin:", "you are in administrator");
             }

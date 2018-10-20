@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="3dp">
 
 
     <ImageView
@@ -22,9 +22,8 @@
         android:id="@+id/appointmentDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:paddingRight="10dp"
         android:text="@string/dateLimitation"
         android:textSize="@dimen/spinner_list_item_text_size"
@@ -38,12 +37,13 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:paddingRight="10dp"
         android:text="@string/startHour"
         android:textSize="@dimen/spinner_list_item_text_size"
         app:layout_constraintStart_toEndOf="@+id/imageLimitation"
         app:layout_constraintTop_toBottomOf="@+id/appointmentDate" />
+
     <TextView
         android:id="@+id/appointmentTreatment"
         android:layout_width="wrap_content"
@@ -51,10 +51,11 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:paddingRight="10dp"
         android:text="@string/treatmenName"
         android:textSize="@dimen/spinner_list_item_text_size"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/imageLimitation"
         app:layout_constraintTop_toBottomOf="@+id/appintmentHour" />
 
@@ -64,12 +65,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:paddingRight="10dp"
         android:text="@string/clientName"
         android:textSize="@dimen/spinner_list_item_text_size"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageLimitation"
         app:layout_constraintTop_toBottomOf="@+id/appointmentTreatment"
@@ -84,7 +85,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="12dp"
         android:background="@color/colorPrimary"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/baseline"
-        android:visibility="invisible"/>
+        app:srcCompat="@drawable/baseline" />
 </android.support.constraint.ConstraintLayout>

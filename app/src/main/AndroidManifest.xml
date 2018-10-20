@@ -98,7 +98,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
-            android:name=".activitys.Calendar.NewAppointment"
+            android:name=".activitys.Calendar.NewAppointmentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
     </application>

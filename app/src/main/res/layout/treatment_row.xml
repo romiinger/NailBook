@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="3dp">
 
 
     <ImageView
         android:id="@+id/imageTreatment"
-        android:layout_width="69dp"
-        android:layout_height="77dp"
+        android:layout_width="66dp"
+        android:layout_height="58dp"
         android:layout_marginStart="@dimen/text_margin_standard"
         android:layout_marginTop="@dimen/text_margin_standard"
         app:layout_constraintStart_toStartOf="parent"

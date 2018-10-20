@@ -13,7 +13,7 @@ public class MyEventCalendar  implements Comparable<MyEventCalendar>{
     private String startHour;
     private String endHour;
     private String id;
-    private DateFormat format = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+    private DateFormat format = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
     private static final String TAG = "Appointment";
 
     public MyEventCalendar(String id ,String date, String startHour , String endHour)

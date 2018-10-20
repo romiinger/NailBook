@@ -75,7 +75,7 @@ public class CustomCalendarActivity extends AppCompatActivity {
                 }
                 case romiinger.nailbook.R.id.appointmensts_menu: {
                     //Log.d(TAG, "Start profile_activity");
-                    Intent intent = new Intent(CustomCalendarActivity.this, NewAppointment.class);
+                    Intent intent = new Intent(CustomCalendarActivity.this, NewAppointmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();

@@ -102,12 +102,12 @@ public class TreatmentsAdapterFirebase  {
     public void getTreatmentById(final String id, final GetTreatmentByIdListener listener) {
         getTreatmentsList(new GetTreatmentListListener() {
             public void onComplete(final List<Treatments> treatmentsList) {
-                Log.d(TAG, "after get wallet list, wallet size=" + treatmentsList.size());
+                Log.d(TAG, "after get tratment list, list size=" + treatmentsList.size());
                 for (int i = 0; i < treatmentsList.size(); i++) {
                     Treatments treatment = treatmentsList.get(i);
                     Log.d(TAG,"treatment i: "+i+ " id= " + treatment.getId());
                     if (treatment.getId().equals(id) ) {
-                        Log.d(TAG,"Wallet by userId found ! " );
+                        Log.d(TAG,"treatment by userId found ! " );
                         listener.onComplete(treatment);
                     }
                 }

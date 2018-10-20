@@ -41,21 +41,18 @@
             android:layout_height="match_parent"
             android:layout_marginTop="35dp"
             android:background="@color/colorSecondary"
-            android:orientation="vertical"
             android:gravity="center"
-            android:padding="12dp">
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:paddingTop="50dp">
 
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:layout_marginTop="12dp"
                 android:gravity="center"
+                android:paddingTop="50dp"
                 android:src="@drawable/agend_icon" />
-
-
-
 
             <LinearLayout
                 android:id="@+id/layoutDate"
@@ -101,90 +98,50 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutOpenHour"
+            <TextView
+                android:id="@+id/tile_treatments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorSecondary"
-                android:orientation="horizontal"
-                android:padding="3dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="32dp"
-                    android:focusable="false"
-                    android:text="@string/startHour"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/colorAccent"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/inputOpenHour"
-                    android:layout_width="220dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@color/colorAccent"
-                    android:focusable="false"
-                    android:inputType="date"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/colorAccent"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.151"
-                    app:layout_constraintStart_toEndOf="@+id/editText"
-                    tools:layout_editor_absoluteY="0dp" />
-
-            </LinearLayout>
-
-
-
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/inputMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/durationLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp"
-                android:hint="@string/message"
-                android:inputType="text"
-                android:background="@color/colorAccent"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/black"
+                android:text="@string/ChoiceTreatment"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/inputDateLayout" />
+            <TextView
+                android:id="@+id/textChoiceAppointment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:padding="3dp"
+                android:text="@string/ChoiceAppointment"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="3dp" />
 
-        </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ChoiceTreatment"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/search_appointments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/colorPrimary"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/search_icon" />
+
+            <ListView
+                android:id="@+id/lvTreatments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/tile_treatments"
+                tools:listitem="@layout/check_box_treatments"
+                ></ListView>
 
 
-
-        <ListView
-            android:id="@+id/lvTreatments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/check_box_treatments">
-        </ListView>
         </LinearLayout>
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/saveAppointment"

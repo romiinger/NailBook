@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         myFirebase = new FirebaseUtil();
 
-        //DatabaseReference dbNode = FirebaseDatabase.getInstance().getReference("appointment");
-        //dbNode.removeValue();
+
         createToolBar();
         //createNavigationView();
 

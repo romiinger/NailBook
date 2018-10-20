@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +56,10 @@ public class WorkDayAdapterFirebase {
         myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                Log.d(TAG,"new workdate is pushed to database");
+                Log.d(TAG,"Before to create new emptys appointments");
                 ScheduleAppointment scheduleAppointment = new ScheduleAppointment();
-                scheduleAppointment.getEmptyAppointments(workDay.getDate(), new ScheduleAppointment.GetDatesToAppointmentListener() {
+                scheduleAppointment.getEmptyAppointments(workDay , new ScheduleAppointment.GetDatesToAppointmentListener() {
                     @Override
                     public void onComplete(List<Appointment> emptyAppointments) {
                         listener.onComplete(emptyAppointments);                    }
@@ -78,7 +81,7 @@ public class WorkDayAdapterFirebase {
 
     public void getWorkDayList( final GetWorkDayListListener listener) {
         DatabaseReference myRef = mdatabase.getReference(TABLE_DATABASE);
-        myRef.addValueEventListener(new ValueEventListener()
+        myRef.addListenerForSingleValueEvent(new ValueEventListener()
         {
             final List<WorkDay> workDayList = new ArrayList<>();
             @Override
@@ -108,14 +111,28 @@ public class WorkDayAdapterFirebase {
         getWorkDayList(new GetWorkDayListListener() {
             @Override
             public void onComplete(List<WorkDay> workDayList) {
+                WorkDay worday=null;
                 for(int i=0;i<workDayList.size();i++)
                 {
-                    if(date == workDayList.get(i).getDate())
+                    Calendar cal = Calendar.getInstance();
+                    DateFormat formatDate = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+                    Date dateD= new Date(date);
+                    Date date2 = new Date(workDayList.get(i).getDate());
+                    //cal.setTime(formatDate.format(dateD));
+                    if(dateD.compareTo(date2)==0)
+                    //if(date == workDayList.get(i).getDate())
                     {
-                        listener.onComplete(workDayList.get(i));
+                        worday=workDayList.get(i);
+                        break;
                     }
                 }
-                listener.onComplete(new WorkDay());
+                if(worday!=null){
+                    listener.onComplete(worday);
+                }
+                else{
+                    listener.onComplete(new WorkDay());
+
+                }
             }
         });
     }
