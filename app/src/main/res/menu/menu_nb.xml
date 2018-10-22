@@ -7,7 +7,7 @@
     android:visible="true">
     <item
         android:id="@+id/workDiary"
-        android:title="@string/WorkDiary"
+        android:title="@string/Calendar"
         android:checkable="true"
         android:icon="@drawable/agend_icon"
         app:showAsAction="ifRoom">

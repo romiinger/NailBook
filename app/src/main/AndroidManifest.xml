@@ -22,15 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activitys.activity_login"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        </activity>
-        <activity
-            android:name=".activitys.SignupActivity"
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
+
         <activity
             android:name=".activitys.User.ResetPasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -83,6 +76,30 @@
 
         <activity
             android:name=".activitys.Treatments.TreatmentViewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.CustomCalendarActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.NewWorkDayActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.LimitationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.NewAppointmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.AppointmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".activitys.Calendar.ApointmentListViewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
     </application>

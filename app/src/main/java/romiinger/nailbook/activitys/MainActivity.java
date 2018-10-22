@@ -14,8 +14,15 @@ import android.widget.Button;
 import android.support.v7.widget.Toolbar;
 import android.widget.ProgressBar;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
+
+import romiinger.nailbook.Class.Appointment;
+import romiinger.nailbook.Firebase.AppointmentAdapterFirebase;
+import romiinger.nailbook.activitys.Calendar.CustomCalendarActivity;
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.R;
@@ -39,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(romiinger.nailbook.R.layout.activity_main);
+
         myFirebase = new FirebaseUtil();
+
 
         createToolBar();
         //createNavigationView();
@@ -85,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()) {
             case romiinger.nailbook.R.id.workDiary: {
                 //toDo new activity
-                Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, CustomCalendarActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                //Toast.makeText(this, "coming soon ", Toast.LENGTH_LONG).show();
                 break;
             }
             case romiinger.nailbook.R.id.treatments: {

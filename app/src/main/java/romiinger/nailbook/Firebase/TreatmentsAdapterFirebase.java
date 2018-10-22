@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class TreatmentsAdapterFirebase  {
     public String getNewTreatmentId() {
         DatabaseReference myRef = mdatabase.getReference("treatments");
         String treatmentId = myRef.push().getKey();
-        Log.d(TAG, "treatmentd= " + treatmentId);
+        Log.d(TAG, "treatmentId= " + treatmentId);
         return treatmentId;
     }
     public interface GetAddTreatmentListener{
@@ -64,6 +65,36 @@ public class TreatmentsAdapterFirebase  {
 
     }
 
+    public interface GetMaxDurationTreatmentListener {
+        void onComplete(Treatments maxDurationTreatment);
+    }
+    public void getMaxDurationTreatment(final GetMaxDurationTreatmentListener listener){
+        getTreatmentsList(new GetTreatmentListListener() {
+            @Override
+            public void onComplete(List<Treatments> treatmentsList) {
+
+               /* int maxMinutes=0;
+                Treatments maxDurationTreatment= null;
+                for(int i=0;i<treatmentsList.size();i++){
+                    String sMinutes =treatmentsList.get(i).getDuration();
+                    int minutes = Integer.parseInt(sMinutes);
+                    if(minutes > maxMinutes)
+                    {
+                        maxDurationTreatment = treatmentsList.get(i);
+                        maxMinutes = minutes;
+                    }
+                }
+                */
+               for(int i=0; i< treatmentsList.size();i++)
+               {
+                   Log.d(TAG,"treatmentlist i= " + i+" duration= "+treatmentsList.get(i).getDuration());
+               }
+               Treatments maxDuration = treatmentsList.get(treatmentsList.size() -1);
+               Log.d(TAG,"treatment with max duraion = "+ maxDuration.getDuration());
+                listener.onComplete(maxDuration);
+            }
+        });
+    }
     public interface GetTreatmentByIdListener {
         void onComplete(Treatments treatment);
     }
@@ -71,12 +102,12 @@ public class TreatmentsAdapterFirebase  {
     public void getTreatmentById(final String id, final GetTreatmentByIdListener listener) {
         getTreatmentsList(new GetTreatmentListListener() {
             public void onComplete(final List<Treatments> treatmentsList) {
-                Log.d(TAG, "after get wallet list, wallet size=" + treatmentsList.size());
+                Log.d(TAG, "after get tratment list, list size=" + treatmentsList.size());
                 for (int i = 0; i < treatmentsList.size(); i++) {
                     Treatments treatment = treatmentsList.get(i);
                     Log.d(TAG,"treatment i: "+i+ " id= " + treatment.getId());
                     if (treatment.getId().equals(id) ) {
-                        Log.d(TAG,"Wallet by userId found ! " );
+                        Log.d(TAG,"treatment by userId found ! " );
                         listener.onComplete(treatment);
                     }
                 }
@@ -104,6 +135,7 @@ public class TreatmentsAdapterFirebase  {
                     Treatments newTreatament = new Treatments(id,name,description,price,duration);
                     treatmentsList.add(newTreatament);
                 }
+                Collections.sort(treatmentsList);
                 listener.onComplete(treatmentsList);
             }
 

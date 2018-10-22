@@ -18,9 +18,13 @@ public class Wallet {
         this.walletId = walletAdapterFirebase.getNewWalletId();
         this.userId = userId;
         this.ammount = "0";
-        walletAdapterFirebase.addWallet(this);
+        walletAdapterFirebase.addWallet(this, new WalletAdapterFirebase.GetAddWAlletListener() {
+            @Override
+            public void onComplete(boolean onSucess) {
+                Log.d(TAG,"the update wallet isSuccess= "+ onSucess);
+            }
+        });
     }
-
 
     public Wallet(Wallet wallet)
     {
@@ -42,7 +46,12 @@ public class Wallet {
         Log.d(TAG,"the new ammount is : "+ newAmmount);
         this.ammount = Integer.toString(newAmmount);
         walletAdapterFirebase = new WalletAdapterFirebase();
-        walletAdapterFirebase.addWallet(this);
+        walletAdapterFirebase.addWallet(this, new WalletAdapterFirebase.GetAddWAlletListener() {
+            @Override
+            public void onComplete(boolean onSucess) {
+                Log.d(TAG,"the update wallet isSuccess= "+ onSucess);
+            }
+        });
     }
 
     public String getWalletId() {

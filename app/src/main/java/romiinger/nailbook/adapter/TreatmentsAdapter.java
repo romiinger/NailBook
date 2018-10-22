@@ -91,6 +91,7 @@ public class TreatmentsAdapter extends RecyclerView.Adapter<TreatmentsAdapter.My
             }
         };
     }
+
     public interface TreatmentsAdapterListener {
         void onClientSelected(Treatments user);
     }

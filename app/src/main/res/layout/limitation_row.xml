@@ -4,56 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="3dp">
+    android:padding="10dp">
 
 
     <ImageView
-        android:id="@+id/imageTreatment"
-        android:layout_width="66dp"
-        android:layout_height="58dp"
+        android:id="@+id/imageLimitation"
+        android:layout_width="69dp"
+        android:layout_height="74dp"
         android:layout_marginStart="@dimen/text_margin_standard"
         android:layout_marginTop="@dimen/text_margin_standard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/treataments_icon" />
+        app:srcCompat="@drawable/work_off_icon" />
+
 
     <TextView
-        android:id="@+id/nameTreatment"
+        android:id="@+id/limitationName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:hint="@string/treatmenName"
-        android:text="@string/hint_treatment"
-        android:textColor="@color/colorPrimary"
-        android:textSize="24dp"
-        app:layout_constraintStart_toEndOf="@+id/imageTreatment"
+        android:layout_marginTop="8dp"
+        android:paddingRight="10dp"
+        android:text="@string/hint_name"
+        android:textSize="@dimen/spinner_list_item_text_size"
+        app:layout_constraintStart_toEndOf="@+id/imageLimitation"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/durationLayout"
+        android:id="@+id/limitationStartHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="@string/duration"
+        android:paddingRight="10dp"
+        android:text="@string/startHour"
         android:textSize="@dimen/spinner_list_item_text_size"
-        app:layout_constraintStart_toEndOf="@+id/imageTreatment"
-        app:layout_constraintTop_toBottomOf="@+id/nameTreatment" />
+        app:layout_constraintStart_toEndOf="@+id/imageLimitation"
+        app:layout_constraintTop_toBottomOf="@+id/limitationName" />
 
     <TextView
-        android:id="@+id/priceLayout"
+        android:id="@+id/limitationEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:paddingRight="10dp"
-        android:text="@string/price"
+        android:text="@string/endHour"
         android:textSize="@dimen/spinner_list_item_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/imageLimitation"
+        app:layout_constraintTop_toBottomOf="@+id/limitationStartHour"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </android.support.constraint.ConstraintLayout>

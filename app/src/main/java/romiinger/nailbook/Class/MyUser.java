@@ -7,7 +7,7 @@ public class MyUser
     private  String phone;
     private  String email;
     private  Wallet mWallet;
-    private  String wallet;//toDo replece this name to ammount
+   // private  String wallet;//toDo replece this name to ammount
 
 
    /* public MyUser()
@@ -34,22 +34,22 @@ public class MyUser
          this.stId = null;
          this.mWallet = null;
      }
-     public MyUser(String name , String phone,String email, String id, String wallet)
+     public MyUser(String name , String phone,String email, String id )
      {
          this.name = name;
          this.stId = id;
          this.phone = phone;
          this.email = email;
-         this.wallet = wallet;
+        // this.wallet = wallet;
      }
-
+/*
      public  String getWallet() {
          return wallet;
      }
 
      public void setWallet(String wallet) {
          this.wallet = wallet;
-     }
+     }*/
 
      public String getName()
  {
@@ -72,6 +72,6 @@ public class MyUser
      public void setStId(String stId) {
          this.stId = stId;
          this.mWallet=new Wallet(stId);
-         this.wallet = "0";
+       //  this.wallet = "0";
      }
  }

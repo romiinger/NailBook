@@ -1,7 +1,10 @@
 package romiinger.nailbook.Firebase;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,16 +34,29 @@ public class WalletAdapterFirebase {
         Log.d(TAG, "walletId= " + walletId);
         return walletId;
     }
-
-    public void addWallet(Wallet wallet) {
+    public void addWallet(Wallet wallet, final GetAddWAlletListener listener) {
         DatabaseReference myRef = mdatabase.getReference("wallet").child(wallet.getWalletId());
         Map<String, Object> value = new HashMap<>();
         value.put("ammount", wallet.getAmmount());
         value.put("walletId", wallet.getWalletId());
         value.put("userId", wallet.getUserId());
-        myRef.setValue(value);
+        myRef.setValue(value).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onComplete(true);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "Exception to push data " + e);
+                listener.onComplete(false);
+            }
+        });
     }
 
+    public interface GetAddWAlletListener{
+        void onComplete(boolean onSucess);
+    }
     public interface GetWalletByClientIdListener {
         void onComplete(Wallet wallet);
     }
@@ -49,16 +65,16 @@ public class WalletAdapterFirebase {
         getWalletList(new WalletListListener() {
             public void onComplete(final List<Wallet> walletList) {
                 Log.d(TAG, "after get wallet list, wallet size=" + walletList.size());
-                String userId= usId;
+                String userId = usId;
                 if (userId == null) {
                     userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 }
-                Log.d(TAG,"search userId = " + userId);
+                Log.d(TAG, "search userId = " + userId);
                 for (int i = 0; i < walletList.size(); i++) {
                     Wallet wallet = walletList.get(i);
-                    Log.d(TAG,"wallet i: "+i+ " userId= "+wallet.getUserId());
-                    if (wallet.getUserId().equals(userId) ) {
-                        Log.d(TAG,"Wallet by userId found ! " );
+                    Log.d(TAG, "wallet i: " + i + " userId= " + wallet.getUserId());
+                    if (wallet.getUserId().equals(userId)) {
+                        Log.d(TAG, "Wallet by userId found ! ");
                         listener.onComplete(wallet);
                     }
                 }
@@ -66,9 +82,53 @@ public class WalletAdapterFirebase {
         });
 
     }
+    public void getWalletByUserIdNoView(final String usId, final GetWalletByClientIdListener listener) {
+        getWalletListNoView(new WalletListListener() {
+            public void onComplete(final List<Wallet> walletList) {
+                        Wallet wallet = foundWallet(walletList,usId);
+                        listener.onComplete(wallet);
+
+            }
+        });
+    }
+    private Wallet foundWallet( List<Wallet> walletList,  String uid)
+    {
+        Log.d(TAG, "after get wallet list, wallet size=" + walletList.size());
+        if (uid == null) {
+            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+        Log.d(TAG, "search userId = " + uid);
+        for (int i = 0; i < walletList.size(); i++) {
+            Wallet wallet = walletList.get(i);
+            Log.d(TAG, "wallet i: " + i + " userId= " + wallet.getUserId());
+            if (wallet.getUserId().equals(uid)) {
+                Log.d(TAG, "Wallet by userId found ! ");
+                return wallet;
+            }
+        }
+        return null;
+    }
 
     public interface WalletListListener {
         void onComplete(List<Wallet> walletList);
+    }
+
+    public void getWalletListNoView(final WalletListListener listener) {
+        DatabaseReference myRef = mdatabase.getReference("wallet");
+        final List<Wallet> walletList = new ArrayList<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                walletList.clear();
+                walletList.addAll(toWallet(dataSnapshot));
+                listener.onComplete(walletList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //listener.onComplete(null);
+            }
+        });
     }
 
     public void getWalletList(final WalletListListener listener) {
@@ -78,14 +138,7 @@ public class WalletAdapterFirebase {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 walletList.clear();
-                for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    Map<String, Object> value = (Map<String, Object>) snap.getValue();
-                    String walletId = (String) value.get("walletId");
-                    String ammount = (String) value.get("ammount");
-                    String userId = (String) value.get("userId");
-                    Wallet newWallet = new Wallet(ammount, walletId, userId);
-                    walletList.add(newWallet);
-                }
+                walletList.addAll(toWallet(dataSnapshot));
                 listener.onComplete(walletList);
             }
 
@@ -94,5 +147,18 @@ public class WalletAdapterFirebase {
                 //listener.onComplete(null);
             }
         });
+    }
+
+    private List<Wallet> toWallet(DataSnapshot dataSnapshot) {
+        List<Wallet> walletList = new ArrayList<>();
+        for (DataSnapshot snap : dataSnapshot.getChildren()) {
+            Map<String, Object> value = (Map<String, Object>) snap.getValue();
+            String walletId = value.get("walletId").toString();
+            String ammount = value.get("ammount").toString();
+            String userId = value.get("userId").toString();
+            Wallet newWallet = new Wallet(ammount, walletId, userId);
+            walletList.add(newWallet);
+        }
+        return walletList;
     }
 }

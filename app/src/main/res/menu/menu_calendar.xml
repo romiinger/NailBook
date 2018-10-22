@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <item
+            android:id="@+id/appointmensts_menu"
+            android:checkable="false"
+            android:icon="@drawable/agend_icon"
+            android:title="@string/NewAppointmnet"
+            app:showAsAction="collapseActionView" />
+
+        <item
+            android:id="@+id/limitationMenu"
+            android:checkable="false"
+            android:visible="false"
+            android:title="Limitation"
+            app:showAsAction="collapseActionView" />
+        <item
+            android:id="@+id/workDayMenu"
+            android:checkable="false"
+            android:visible="false"
+            android:title="@string/WorkDay"
+            app:showAsAction="collapseActionView">
+
+        </item>
+        <item
+            android:id="@+id/myAppointments"
+            android:checkable="false"
+            android:title="@string/myAppointments"
+            app:showAsAction="collapseActionView">
+        </item>
+
+</menu>

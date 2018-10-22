@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.*;
 
+import romiinger.nailbook.Class.Appointment;
 import romiinger.nailbook.Class.MyUser;
 import romiinger.nailbook.activitys.MainActivity;
 import romiinger.nailbook.activitys.User.activity_user;
@@ -39,15 +40,18 @@ public class FirebaseUtil {
     private static boolean isAdmin;
     private static final String TAG = "FirebaseUtil";
     private static boolean mTaskSuccesful = false;
+    private static boolean isLogin;
 
     public FirebaseUtil() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFiebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFiebaseAuth.getCurrentUser();
+
     }
 
 
     public static void openFbReference(String ref, final MainActivity callerActivity, final FirebaseListener listener) {
+
         Log.d(TAG, "in openFbReference()");
         if (firebaseUtil == null) {
             Log.d(TAG, "new instance from firebase");
@@ -61,7 +65,7 @@ public class FirebaseUtil {
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     if (mFiebaseAuth.getCurrentUser() == null) {
                         Log.d(TAG, "Before signIn()");
-                        FirebaseUtil.signIn(new FirebaseListener()
+                        signIn(new FirebaseListener()
                         {
                             @Override
                             public void onComplete(String message) {
@@ -139,57 +143,59 @@ public class FirebaseUtil {
     }
 
     private static void checkAdmin(String uid) {
-        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-        userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
-            @Override
-            public void onComplete(MyUser user) {
-                if (user.getName() != null) {
-                    Log.d(TAG, "User is Register");
-                } else {
-                    Log.d(TAG, "User not Register, over tu user_activity");
-                    Intent intent = new Intent(caller, activity_user.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    caller.startActivity(intent);
-                    caller.finish();
+        //check if user is register to nailBook
+        if (mFirebaseUser != null) {
+            UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+            userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
+                @Override
+                public void onComplete(MyUser user) {
+                    if (user.getName() != null) {
+                        Log.d(TAG, "User is Register");
+                    } else {
+                        Log.d(TAG, "User not Register, over tu user_activity");
+                        Intent intent = new Intent(caller, activity_user.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        caller.startActivity(intent);
+                        caller.finish();
+                    }
                 }
-            }
-        });
-        Log.d(TAG, "in checkAdmin");
-        FirebaseUtil.isAdmin = false;
-        DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
-        ChildEventListener listener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
-                caller.showMenu();
-                Log.d("Admin:", "you are in administrator");
-            }
+            });
+            Log.d(TAG, "in checkAdmin");
+            isAdmin = false;
+            DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
+            ChildEventListener listener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    isAdmin = true;
+                    caller.showMenu();
+                    Log.d("Admin:", "you are in administrator");
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                FirebaseUtil.isAdmin = true;
-                caller.showMenu();
-                Log.d("Admin:", "you are in administrator");
-            }
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    isAdmin = true;
+                    caller.showMenu();
+                    Log.d("Admin:", "you are in administrator");
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        };
-        ref.addChildEventListener(listener);
+                }
+            };
+            ref.addChildEventListener(listener);
+        }
     }
-
 
     public static boolean isIsAdmin() {
         Log.d(TAG, "isAdmin=" + isAdmin);

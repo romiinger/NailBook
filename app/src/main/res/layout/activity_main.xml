@@ -60,30 +60,11 @@
         android:contentDescription="@string/welcome"
         android:src="@drawable/wallpaper" />
 
-    <Button
-        android:id="@+id/next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary"
-        android:padding="30dp"
-        android:text="@string/next"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/colorAccent"
-        android:textSize="14sp" />
+
 
 
 </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="30dp"
-        android:visibility="visible" />
 </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

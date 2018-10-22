@@ -14,6 +14,7 @@
         android:id="@+id/logout_menu"
         android:checkable="false"
         android:title="@string/Logout"
+        android:visible="true"
         app:showAsAction="collapseActionView" />
 
 
