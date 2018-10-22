@@ -70,6 +70,8 @@ public class CustomCalendarActivity extends AppCompatActivity {
             limitationMenu.setVisible(true);
             MenuItem workDayMenu =menu.findItem(R.id.workDayMenu);
             workDayMenu.setVisible(true);
+            MenuItem myAppointments = menu.findItem(R.id.myAppointments);
+            myAppointments.setVisible(false);
         }
 
 

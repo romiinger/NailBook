@@ -125,7 +125,6 @@ public class TreatmentsActivity extends AppCompatActivity {
                     Intent intent = new Intent(TreatmentsActivity.this, NewTreatmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "coming soon ", Toast.LENGTH_LONG).show();
                 }
             });
 

@@ -66,38 +66,6 @@ public class TreatmentViewActivity extends AppCompatActivity {
         {
             btEdit.setVisibility(View.INVISIBLE);
         }
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //super.onCreateOptionsMenu(menu);
-        menu.add("").setIcon(romiinger.nailbook.R.drawable.ic_launcher_background);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_treatment_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //getUserInstance();
-        switch (item.getItemId()) {
-            case romiinger.nailbook.R.id.editTreatment: {
-                editTreatment();
-                break;
-            }
-            case romiinger.nailbook.R.id.user_profile_menu: {
-                //Log.d(TAG, "Start profile_activity");
-                // Intent intent = new Intent(TreatmentViewActivity.this, ProfileUserActivity.class);
-                // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                // startActivity(intent);
-                //  finish();
-                break;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
     }
 
     private void createToolBar() {

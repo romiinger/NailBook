@@ -117,4 +117,6 @@
     <string name="ChoiceTreatment">Choice Treatment</string>
     <string name="ChoiceAppointment">Choice Appointmnet</string>
     <string name="myAppointments">My Appointments</string>
+    <string name="Calendar">Calendar</string>
+    <string name="WorkDay">New WorkDay</string>
 </resources>

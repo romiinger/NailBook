@@ -58,8 +58,8 @@ public class AppointmentActivity extends AppCompatActivity {
                         name.setText(treatment.getName());
                         date.setText(mAppointment.getDate());
                         hour.setText(mAppointment.getStartHour());
-                        duration.setText(treatment.getDuration());
-                        price.setText(treatment.getPrice());
+                        duration.setText(treatment.getDuration() + " minutes");
+                        price.setText(treatment.getPrice() + " ₪");
                         btCancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

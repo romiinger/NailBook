@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ProfileUserActivity extends  AppCompatActivity {
     private static final String TAG = "ProfileUserActivity";
     private DrawerLayout mdrawerLayout;
     private Button btResetPassword ,btEditProfile;
-    private LinearLayout walletLayout,treatmentLayout;
+    private LinearLayout walletLayout,treatmentLayout,photosLayout;
     private Bundle bundle;
     private String userIdBundle;
 
@@ -84,6 +85,13 @@ public class ProfileUserActivity extends  AppCompatActivity {
             }
 
         });
+        photosLayout=(LinearLayout)findViewById(R.id.photos_layout);
+        photosLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ProfileUserActivity.this,"comming soon",Toast.LENGTH_SHORT).show();
+            }
+        });
         walletLayout = (LinearLayout)findViewById(R.id.wallet_Layout);
         walletLayout.setOnClickListener(new OnWalletClick());
         treatmentLayout =(LinearLayout)findViewById(R.id.treatment_layout);
@@ -98,6 +106,12 @@ public class ProfileUserActivity extends  AppCompatActivity {
         else{
             Log.d(TAG,"no administrator view");
             btResetPassword.setVisibility(View.VISIBLE);
+            btResetPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(ProfileUserActivity.this,"commnin soon",Toast.LENGTH_SHORT).show();
+                }
+            });
             btEditProfile.setVisibility(View.VISIBLE);
             btResetPassword.setOnClickListener(new View.OnClickListener() {
 

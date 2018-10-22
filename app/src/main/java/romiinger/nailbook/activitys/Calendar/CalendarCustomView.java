@@ -26,6 +26,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,8 +51,10 @@ public class CalendarCustomView extends LinearLayout{
     private Context context;
     private GridAdapter mAdapter;
     private Context mContext;
-    private int month = calendar.get(Calendar.MONTH);
-    private int year = calendar.get(Calendar.YEAR);
+    //private int month = calendar.get(Calendar.MONTH);
+    //private int year = calendar.get(Calendar.YEAR);
+    private int month = -1;
+    private int year = -1;
 
     public CalendarCustomView(Context context)
     {
@@ -88,9 +91,11 @@ public class CalendarCustomView extends LinearLayout{
             @Override
             public void onClick(View view) {
                 calendar.add(Calendar.MONTH,-1);
-                month =calendar.get(Calendar.MONTH);
+                month =calendar.get(Calendar.MONTH)+1;
                 year =calendar.get(Calendar.YEAR);
 
+                //calendar.set(Calendar.MONTH,month);
+                //calendar.set(Calendar.YEAR,year);
                 setUpCalendarAtapter();
             }
         });
@@ -101,7 +106,7 @@ public class CalendarCustomView extends LinearLayout{
             @Override
             public void onClick(View view) {
                 calendar.add(Calendar.MONTH,1);
-                month =calendar.get(Calendar.MONTH);
+                month =calendar.get(Calendar.MONTH)-1;
                 year =calendar.get(Calendar.YEAR);
                 setUpCalendarAtapter();
             }
@@ -113,7 +118,14 @@ public class CalendarCustomView extends LinearLayout{
         calendarGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                calendar.set(year,month,i);
+                //calendar.set(year,month,i);
+                if(month == -1 || year == -1){
+                    month = calendar.get(Calendar.MONTH);
+                    year = calendar.get(Calendar.YEAR);
+                }
+                calendar.set(Calendar.YEAR,year);
+                calendar.set(Calendar.MONTH,month);
+                calendar.set(Calendar.DATE,i);
                 String date =  formatDate.format(calendar.getTime());
                 Log.d("TAG","cliked in date =" + date);
                 if(FirebaseUtil.isIsAdmin())

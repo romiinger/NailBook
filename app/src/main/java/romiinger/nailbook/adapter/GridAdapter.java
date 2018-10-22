@@ -14,12 +14,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.List;
 
 import romiinger.nailbook.Class.WorkDay;
 import romiinger.nailbook.R;
-import romiinger.nailbook.WorkDiary;
 
 public class GridAdapter extends ArrayAdapter {
 
