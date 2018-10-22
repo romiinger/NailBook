@@ -3,6 +3,7 @@ package romiinger.nailbook.Firebase;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,7 +47,7 @@ public class UserAdapterFirebase {
         value.put("phone",user.getPhone());
         value.put("email",user.getEmail());
         value.put("stId",user.getStId());
-        value.put("wallet",user.getWallet());
+        //value.put("wallet",user.getWallet());
         myRef.setValue(value);
         listener.onComplete();
 
@@ -57,10 +58,10 @@ public class UserAdapterFirebase {
         void onComplete(MyUser user);
     }
     public static void getUserById(final String usId, final GetUserByIdListener listener){
-        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser auth = FirebaseUtil.getmFirebaseUser();
         Log.d(TAG,"usId= " +usId);
         final String userUid;
-        if(usId == null){
+        if(usId == null && auth != null){
             Log.d(TAG,"usId==null? " +usId);
             userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();}
         else
@@ -84,8 +85,8 @@ public class UserAdapterFirebase {
                     String name = (String) value.get("name");
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    String wallet = (String) value.get("wallet");
-                    listener.onComplete(new MyUser(name,phone,email,id,wallet));
+                    //String wallet = (String) value.get("wallet");
+                    listener.onComplete(new MyUser(name,phone,email,id));
                 }
             }
 
@@ -117,8 +118,7 @@ public class UserAdapterFirebase {
                     Log.d(TAG,"user name = "+ name + "user id=" + id);
                     String phone = (String) value.get("phone");
                     String email = (String) value.get("email");
-                    String wallet = (String) value.get("wallet").toString();
-                    MyUser newUser = new MyUser(name,phone,email,id,wallet);
+                    MyUser newUser = new MyUser(name,phone,email,id);
                     userList.add(newUser);
                 }
                 for(int i=0; i<userList.size();i++)

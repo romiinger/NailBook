@@ -23,8 +23,6 @@ import java.util.TimeZone;
 import romiinger.nailbook.Class.LimitationEvent;
 import romiinger.nailbook.Firebase.LimitationAdapterFirebase;
 import romiinger.nailbook.R;
-import romiinger.nailbook.activitys.Utils.MyPickerDateAndTime;
-import romiinger.nailbook.adapter.LimitationAdapter;
 
 public class LimitationActivity extends AppCompatActivity {
 

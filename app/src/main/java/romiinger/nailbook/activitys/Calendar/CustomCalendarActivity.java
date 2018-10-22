@@ -1,23 +1,18 @@
 package romiinger.nailbook.activitys.Calendar;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.Toast;
 
 import romiinger.nailbook.Firebase.FirebaseUtil;
 import romiinger.nailbook.R;
 import romiinger.nailbook.activitys.MainActivity;
-import romiinger.nailbook.activitys.Utils.MyDatePickerFragment;
 
 public class CustomCalendarActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -66,8 +61,9 @@ public class CustomCalendarActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_calendar, menu);
         if (FirebaseUtil.isIsAdmin()) {
-            MenuItem limitationMenu =menu.findItem(R.id.limitationMenu);
-            limitationMenu.setVisible(true);
+            //this feature entry in the next version
+           // MenuItem limitationMenu =menu.findItem(R.id.limitationMenu);
+           // limitationMenu.setVisible(true);
             MenuItem workDayMenu =menu.findItem(R.id.workDayMenu);
             workDayMenu.setVisible(true);
             MenuItem myAppointments = menu.findItem(R.id.myAppointments);
@@ -82,13 +78,16 @@ public class CustomCalendarActivity extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             //getUserInstance();
             switch (item.getItemId()) {
+                //this feature  entry in the next version
+                /*
                 case romiinger.nailbook.R.id.limitationMenu: {
+
                     Intent intent = new Intent(CustomCalendarActivity.this, LimitationActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                     return true;
-                }
+                }*/
                 case romiinger.nailbook.R.id.workDayMenu: {
                     newWorkDayActivity();
                     return true;

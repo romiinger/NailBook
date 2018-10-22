@@ -22,15 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activitys.activity_login"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        </activity>
-        <activity
-            android:name=".activitys.SignupActivity"
-            android:theme="@style/Theme.AppCompat.Light">
-        </activity>
+
         <activity
             android:name=".activitys.User.ResetPasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

@@ -53,8 +53,8 @@ public class CalendarCustomView extends LinearLayout{
     private Context mContext;
     //private int month = calendar.get(Calendar.MONTH);
     //private int year = calendar.get(Calendar.YEAR);
-    private int month = -1;
-    private int year = -1;
+    //private int month = -1;
+    //private int year = -1;
 
     public CalendarCustomView(Context context)
     {
@@ -71,11 +71,11 @@ public class CalendarCustomView extends LinearLayout{
         setNextButtonClickEvent();
         setGridCellClickEvents();
     }
-    /*
-    public void CalendarCustomView(Context context,AttributeSet attrs, int defSyleAttr)    {
+
+    public  CalendarCustomView(Context context,AttributeSet attrs, int defSyleAttr)    {
         super(context,attrs,defSyleAttr);
     }
-    */
+
     private void initializeUILayout()
     {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -91,12 +91,8 @@ public class CalendarCustomView extends LinearLayout{
             @Override
             public void onClick(View view) {
                 calendar.add(Calendar.MONTH,-1);
-                month =calendar.get(Calendar.MONTH)+1;
-                year =calendar.get(Calendar.YEAR);
-
-                //calendar.set(Calendar.MONTH,month);
-                //calendar.set(Calendar.YEAR,year);
                 setUpCalendarAtapter();
+
             }
         });
     }
@@ -106,8 +102,6 @@ public class CalendarCustomView extends LinearLayout{
             @Override
             public void onClick(View view) {
                 calendar.add(Calendar.MONTH,1);
-                month =calendar.get(Calendar.MONTH)-1;
-                year =calendar.get(Calendar.YEAR);
                 setUpCalendarAtapter();
             }
         });
@@ -118,16 +112,10 @@ public class CalendarCustomView extends LinearLayout{
         calendarGridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //calendar.set(year,month,i);
-                if(month == -1 || year == -1){
-                    month = calendar.get(Calendar.MONTH);
-                    year = calendar.get(Calendar.YEAR);
-                }
-                calendar.set(Calendar.YEAR,year);
-                calendar.set(Calendar.MONTH,month);
-                calendar.set(Calendar.DATE,i);
+                calendar.set(Calendar.DAY_OF_MONTH,i);
                 String date =  formatDate.format(calendar.getTime());
-                Log.d("TAG","cliked in date =" + date);
+                Log.d(TAG,"cliked in date =" + date);
+
                 if(FirebaseUtil.isIsAdmin())
                  updateViewDateToAdmin(date);
                 else
@@ -200,6 +188,8 @@ public class CalendarCustomView extends LinearLayout{
         context.startActivity(intent);
         //context.finish();
     }
+
+
     private void setUpCalendarAtapter()
     {
         final List<Date> dayValuesInCells = new ArrayList<>();
@@ -219,6 +209,7 @@ public class CalendarCustomView extends LinearLayout{
                 currenDate.setText(sDate);
                 mAdapter = new GridAdapter(context,dayValuesInCells,calendar,workDayList);
                 calendarGridView.setAdapter(mAdapter);
+
             }
         });
 

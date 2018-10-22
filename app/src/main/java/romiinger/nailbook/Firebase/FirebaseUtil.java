@@ -40,6 +40,7 @@ public class FirebaseUtil {
     private static boolean isAdmin;
     private static final String TAG = "FirebaseUtil";
     private static boolean mTaskSuccesful = false;
+    private static boolean isLogin;
 
     public FirebaseUtil() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -142,57 +143,59 @@ public class FirebaseUtil {
     }
 
     private static void checkAdmin(String uid) {
-        UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
-        userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
-            @Override
-            public void onComplete(MyUser user) {
-                if (user.getName() != null) {
-                    Log.d(TAG, "User is Register");
-                } else {
-                    Log.d(TAG, "User not Register, over tu user_activity");
-                    Intent intent = new Intent(caller, activity_user.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    caller.startActivity(intent);
-                    caller.finish();
+        //check if user is register to nailBook
+        if (mFirebaseUser != null) {
+            UserAdapterFirebase userAdapterFirebase = new UserAdapterFirebase();
+            userAdapterFirebase.getUserById(uid, new UserAdapterFirebase.GetUserByIdListener() {
+                @Override
+                public void onComplete(MyUser user) {
+                    if (user.getName() != null) {
+                        Log.d(TAG, "User is Register");
+                    } else {
+                        Log.d(TAG, "User not Register, over tu user_activity");
+                        Intent intent = new Intent(caller, activity_user.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        caller.startActivity(intent);
+                        caller.finish();
+                    }
                 }
-            }
-        });
-        Log.d(TAG, "in checkAdmin");
-        isAdmin = false;
-        DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
-        ChildEventListener listener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                isAdmin = true;
-                caller.showMenu();
-                Log.d("Admin:", "you are in administrator");
-            }
+            });
+            Log.d(TAG, "in checkAdmin");
+            isAdmin = false;
+            DatabaseReference ref = mFirebaseDatabase.getReference().child("administrator").child(uid);
+            ChildEventListener listener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    isAdmin = true;
+                    caller.showMenu();
+                    Log.d("Admin:", "you are in administrator");
+                }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-               isAdmin = true;
-                caller.showMenu();
-                Log.d("Admin:", "you are in administrator");
-            }
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    isAdmin = true;
+                    caller.showMenu();
+                    Log.d("Admin:", "you are in administrator");
+                }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        };
-        ref.addChildEventListener(listener);
+                }
+            };
+            ref.addChildEventListener(listener);
+        }
     }
-
 
     public static boolean isIsAdmin() {
         Log.d(TAG, "isAdmin=" + isAdmin);
