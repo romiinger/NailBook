@@ -92,7 +92,7 @@ public class NewWorkDayActivity extends AppCompatActivity {
                 String date = inputDate.getText().toString();
                 String openHour = inputOpenHour.getText().toString();
                 String clouseHour = inputClouseHour.getText().toString();
-                if (date != null && openHour != null && clouseHour != null) {
+                if (date !="" && openHour !="" && clouseHour !="") {
                     btSave.setVisibility(View.INVISIBLE);
                     final WorkDay workDay = new WorkDay(id, date, openHour, clouseHour);
                     workDayAdapterFirebase.getWorkDayByDate(date, new WorkDayAdapterFirebase.GetWorkDayByDateListener() {
@@ -103,7 +103,7 @@ public class NewWorkDayActivity extends AppCompatActivity {
                                 workDayAdapterFirebase.addWorkDay(workDay, new WorkDayAdapterFirebase.GetAddWorkDayListener() {
                                     @Override
                                     public void onComplete(List<Appointment> emptyAppointments) {
-                                        if (emptyAppointments.size() == 0) {
+                                        if (emptyAppointments != null) {
                                             Toast.makeText(NewWorkDayActivity.this, "New workDay save", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(NewWorkDayActivity.this, CustomCalendarActivity.class);
                                             startActivity(intent);
