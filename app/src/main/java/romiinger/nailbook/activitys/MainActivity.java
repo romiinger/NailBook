@@ -213,6 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void showMenu() {
         invalidateOptionsMenu();
-        //createNavigationView();
+        createNavigationView();
     }
 }
